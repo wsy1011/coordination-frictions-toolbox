@@ -1,0 +1,218 @@
+{
+  "selection": {
+    "policy_family": "structural",
+    "allocation_family": "hard_topk",
+    "budget_k": 15,
+    "scenario": "Hard-Topk empty/barge-tug governance (K=15)"
+  },
+  "summary": {
+    "scenario": "Hard-Topk empty/barge-tug governance (K=15)",
+    "policy_family": "structural",
+    "allocation_family": "hard_topk",
+    "budget_k": 15.0,
+    "delta_wait1": -0.0657511570943194,
+    "delta_p90_wait1": -0.0394338599534638,
+    "delta_p95_wait1": -0.0181191996769971,
+    "delta_high_wait_prob": -0.0016060483562586,
+    "delta_low_eff_share": -0.008905541726796,
+    "delta_state4_share": -0.0036029605526346,
+    "expected_wait1": 5.596390022019189,
+    "p90_wait1": 8.96192732681145,
+    "p95_wait1": 11.485751389913418,
+    "high_wait_prob": 0.09839504419364349,
+    "low_eff_share": 0.4028835432044152,
+    "state4_share": 0.2382056770125503
+  },
+  "impact_locks": [
+    {
+      "lock_id": 13,
+      "lock_name": "杨林",
+      "baseline_wait1_min": 1360.8372044514113,
+      "policy_wait1_min": 1356.5484249521812,
+      "delta_wait1_min": -4.2887794992300305,
+      "priority_rank": 1
+    },
+    {
+      "lock_id": 14,
+      "lock_name": "南通",
+      "baseline_wait1_min": 1048.5226663424776,
+      "policy_wait1_min": 1048.5226663424776,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 8
+    },
+    {
+      "lock_id": 2,
+      "lock_name": "下坝",
+      "baseline_wait1_min": 1041.0085416625163,
+      "policy_wait1_min": 1041.0085416625163,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 4
+    },
+    {
+      "lock_id": 3,
+      "lock_name": "杨家湾",
+      "baseline_wait1_min": 656.9755578291958,
+      "policy_wait1_min": 639.8099604620355,
+      "delta_wait1_min": -17.16559736716031,
+      "priority_rank": 6
+    },
+    {
+      "lock_id": 44,
+      "lock_name": "邵伯",
+      "baseline_wait1_min": 499.4711728829242,
+      "policy_wait1_min": 499.4711728829242,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 5
+    },
+    {
+      "lock_id": 7,
+      "lock_name": "魏村",
+      "baseline_wait1_min": 285.63236105051163,
+      "policy_wait1_min": 285.63236105051163,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 10
+    },
+    {
+      "lock_id": 12,
+      "lock_name": "虞山",
+      "baseline_wait1_min": 189.5508076997116,
+      "policy_wait1_min": 189.5508076997116,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 2
+    },
+    {
+      "lock_id": 17,
+      "lock_name": "吕四",
+      "baseline_wait1_min": 188.3662244197922,
+      "policy_wait1_min": 188.3662244197922,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 9
+    },
+    {
+      "lock_id": 8,
+      "lock_name": "丹金",
+      "baseline_wait1_min": 166.66016519920578,
+      "policy_wait1_min": 166.66016519920578,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 7
+    },
+    {
+      "lock_id": 9,
+      "lock_name": "前黄",
+      "baseline_wait1_min": 94.67246610218156,
+      "policy_wait1_min": 94.67246610218156,
+      "delta_wait1_min": 0.0,
+      "priority_rank": 3
+    }
+  ],
+  "ranked_locks": [
+    {
+      "lock_id": 2,
+      "lock_name": "下坝",
+      "corridor": "苏南",
+      "queue_rank": 3,
+      "structural_rank": 1,
+      "queue_risk_score": 0.3265525758031666,
+      "structural_risk_score": 0.4538321229608452
+    },
+    {
+      "lock_id": 13,
+      "lock_name": "杨林",
+      "corridor": "沿江口门",
+      "queue_rank": 1,
+      "structural_rank": 2,
+      "queue_risk_score": 0.5450526676216747,
+      "structural_risk_score": 0.3669966029415126
+    },
+    {
+      "lock_id": 41,
+      "lock_name": "云善",
+      "corridor": "苏北",
+      "queue_rank": 14,
+      "structural_rank": 3,
+      "queue_risk_score": 0.0447745858635965,
+      "structural_risk_score": 0.3287474704822586
+    },
+    {
+      "lock_id": 36,
+      "lock_name": "沙集",
+      "corridor": "苏北",
+      "queue_rank": 25,
+      "structural_rank": 4,
+      "queue_risk_score": 0.0231785626438995,
+      "structural_risk_score": 0.2623584664138063
+    },
+    {
+      "lock_id": 14,
+      "lock_name": "南通",
+      "corridor": "沿江口门",
+      "queue_rank": 2,
+      "structural_rank": 5,
+      "queue_risk_score": 0.4212754269942424,
+      "structural_risk_score": 0.1821682884575683
+    },
+    {
+      "lock_id": 17,
+      "lock_name": "吕四",
+      "corridor": "苏中",
+      "queue_rank": 7,
+      "structural_rank": 6,
+      "queue_risk_score": 0.1104806256336555,
+      "structural_risk_score": 0.1820201358217537
+    },
+    {
+      "lock_id": 35,
+      "lock_name": "成子河",
+      "corridor": "苏北",
+      "queue_rank": 34,
+      "structural_rank": 7,
+      "queue_risk_score": 0.0128200910430139,
+      "structural_risk_score": 0.1797291146591118
+    },
+    {
+      "lock_id": 42,
+      "lock_name": "善南",
+      "corridor": "苏北",
+      "queue_rank": 12,
+      "structural_rank": 8,
+      "queue_risk_score": 0.0498052522819179,
+      "structural_risk_score": 0.1727467258666608
+    },
+    {
+      "lock_id": 26,
+      "lock_name": "周山河",
+      "corridor": "苏中",
+      "queue_rank": 13,
+      "structural_rank": 9,
+      "queue_risk_score": 0.0450411690963314,
+      "structural_risk_score": 0.1430647424275053
+    },
+    {
+      "lock_id": 50,
+      "lock_name": "皂河",
+      "corridor": "京杭运河",
+      "queue_rank": 9,
+      "structural_rank": 10,
+      "queue_risk_score": 0.0912024866899861,
+      "structural_risk_score": 0.1404426555215836
+    },
+    {
+      "lock_id": 12,
+      "lock_name": "虞山",
+      "corridor": "沿江口门",
+      "queue_rank": 8,
+      "structural_rank": 11,
+      "queue_risk_score": 0.0933923442133508,
+      "structural_risk_score": 0.1389146165745809
+    },
+    {
+      "lock_id": 30,
+      "lock_name": "杨庄",
+      "corridor": "苏北",
+      "queue_rank": 20,
+      "structural_rank": 12,
+      "queue_risk_score": 0.030398023280196,
+      "structural_risk_score": 0.122875677627943
+    }
+  ]
+}

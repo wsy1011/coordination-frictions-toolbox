@@ -1,0 +1,184 @@
+{
+  "headline": {
+    "events": 215133,
+    "transitions": 183069,
+    "threshold": 0.75,
+    "expected_wait1": 5.662141179113508,
+    "expected_wait_total": 6.834000468928644,
+    "low_eff_share": 0.41178908493121125,
+    "state4_share": 0.241808637565185
+  },
+  "state_shares": {
+    "State 1": 0.04073623850603565,
+    "State 2": 0.5474746765627531,
+    "State 3": 0.16998044736602624,
+    "State 4": 0.241808637565185
+  },
+  "top_risks": [
+    {
+      "lock_id": 13,
+      "lock_name": "杨林",
+      "corridor": "沿江口门",
+      "queue_risk_score": 0.5450526676216747,
+      "queue_rank": 1
+    },
+    {
+      "lock_id": 14,
+      "lock_name": "南通",
+      "corridor": "沿江口门",
+      "queue_risk_score": 0.4212754269942424,
+      "queue_rank": 2
+    },
+    {
+      "lock_id": 2,
+      "lock_name": "下坝",
+      "corridor": "苏南",
+      "queue_risk_score": 0.3265525758031666,
+      "queue_rank": 3
+    },
+    {
+      "lock_id": 3,
+      "lock_name": "杨家湾",
+      "corridor": "苏南",
+      "queue_risk_score": 0.1654168482469435,
+      "queue_rank": 4
+    },
+    {
+      "lock_id": 8,
+      "lock_name": "丹金",
+      "corridor": "苏南",
+      "queue_risk_score": 0.1372388011932847,
+      "queue_rank": 5
+    }
+  ],
+  "proxy_stats": {
+    "queue_pressure": {
+      "mean": 92.26736019113757,
+      "p50": 66.0,
+      "p75": 128.0,
+      "p90": 214.0
+    },
+    "lock_hour_arrivals": {
+      "mean": 15.790785235180097,
+      "p50": 14.0,
+      "p75": 21.0,
+      "p90": 30.0
+    },
+    "direction_imbalance": {
+      "mean": 0.5007367535429282,
+      "p50": 0.45454545454545453,
+      "p75": 0.7837837837837838,
+      "p90": 1.0
+    },
+    "empty_btp_share": {
+      "mean": 0.46474971296822487,
+      "p50": 0.4782608695652174,
+      "p75": 0.7,
+      "p90": 0.875
+    },
+    "spillover_queue_pressure": {
+      "mean": 90.76678717086712,
+      "p50": 72.73053589484327,
+      "p75": 123.27859468678932,
+      "p90": 181.34930643127365
+    },
+    "spillover_empty_btp_share": {
+      "mean": 0.39581375111260864,
+      "p50": 0.3704789038122372,
+      "p75": 0.5935146443514644,
+      "p90": 0.7764494919306635
+    }
+  },
+  "scenarios": [
+    {
+      "scenario": "Baseline",
+      "expected_wait1": 5.662141179113508,
+      "expected_wait_total": 6.834000468928644,
+      "low_eff_share": 0.41178908493121125,
+      "state4_share": 0.241808637565185,
+      "state_shares": {
+        "State 1": 0.04073623850603565,
+        "State 2": 0.5474746765627531,
+        "State 3": 0.16998044736602624,
+        "State 4": 0.241808637565185
+      },
+      "n": 183058,
+      "delta_wait1": 0.0,
+      "delta_wait_total": 0.0,
+      "delta_low_eff_share": 0.0,
+      "delta_state4_share": 0.0
+    },
+    {
+      "scenario": "Local queue reduction",
+      "expected_wait1": 5.639658174051345,
+      "expected_wait_total": 6.811704086100257,
+      "low_eff_share": 0.4147990917979908,
+      "state4_share": 0.24208312366210685,
+      "state_shares": {
+        "State 1": 0.04063579454333612,
+        "State 2": 0.5445651136586731,
+        "State 3": 0.1727159681358839,
+        "State 4": 0.24208312366210685
+      },
+      "n": 183058,
+      "delta_wait1": -0.022483005062163386,
+      "delta_wait_total": -0.02229638282838664,
+      "delta_low_eff_share": 0.0030100068667795465,
+      "delta_state4_share": 0.0002744860969218499
+    },
+    {
+      "scenario": "Coordinated queue reduction",
+      "expected_wait1": 5.62474512146832,
+      "expected_wait_total": 6.795886961776539,
+      "low_eff_share": 0.4148822718424836,
+      "state4_share": 0.2420223358241851,
+      "state_shares": {
+        "State 1": 0.04071432482402123,
+        "State 2": 0.5444034033334951,
+        "State 3": 0.17285993601829855,
+        "State 4": 0.2420223358241851
+      },
+      "n": 183058,
+      "delta_wait1": -0.037396057645188385,
+      "delta_wait_total": -0.038113507152105264,
+      "delta_low_eff_share": 0.003093186911272361,
+      "delta_state4_share": 0.00021369825900008355
+    },
+    {
+      "scenario": "Local empty/barge-tug coordination",
+      "expected_wait1": 5.631552908578871,
+      "expected_wait_total": 6.8025161713225355,
+      "low_eff_share": 0.4028124637271233,
+      "state4_share": 0.2363452422791654,
+      "state_shares": {
+        "State 1": 0.04136069930548422,
+        "State 2": 0.5558268369673924,
+        "State 3": 0.1664672214479579,
+        "State 4": 0.2363452422791654
+      },
+      "n": 183058,
+      "delta_wait1": -0.030588270534637196,
+      "delta_wait_total": -0.03148429760610849,
+      "delta_low_eff_share": -0.008976621204087931,
+      "delta_state4_share": -0.005463395286019607
+    },
+    {
+      "scenario": "Coordinated empty/barge-tug coordination",
+      "expected_wait1": 5.618441011648181,
+      "expected_wait_total": 6.787386545545454,
+      "low_eff_share": 0.4039304087806639,
+      "state4_share": 0.23768037065027653,
+      "state_shares": {
+        "State 1": 0.041456434375561534,
+        "State 2": 0.5546131568437747,
+        "State 3": 0.16625003813038738,
+        "State 4": 0.23768037065027653
+      },
+      "n": 183058,
+      "delta_wait1": -0.04370016746532723,
+      "delta_wait_total": -0.04661392338319015,
+      "delta_low_eff_share": -0.007858676150547361,
+      "delta_state4_share": -0.004128266914908474
+    }
+  ]
+}

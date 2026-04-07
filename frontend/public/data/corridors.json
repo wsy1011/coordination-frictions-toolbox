@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "macro_corridor": "京杭运河",
+      "lock_count": 11,
+      "visible_points": 11,
+      "total_events": 97554
+    },
+    {
+      "macro_corridor": "沿江口门",
+      "lock_count": 7,
+      "visible_points": 7,
+      "total_events": 39747
+    },
+    {
+      "macro_corridor": "苏南",
+      "lock_count": 7,
+      "visible_points": 7,
+      "total_events": 26331
+    },
+    {
+      "macro_corridor": "苏中",
+      "lock_count": 11,
+      "visible_points": 11,
+      "total_events": 25884
+    },
+    {
+      "macro_corridor": "苏北",
+      "lock_count": 16,
+      "visible_points": 16,
+      "total_events": 25617
+    }
+  ]
+}

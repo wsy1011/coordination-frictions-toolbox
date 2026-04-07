@@ -1,0 +1,148 @@
+{
+  "simulations": [
+    {
+      "policy_family": "queue",
+      "allocation_family": "uniform",
+      "budget_k": 5,
+      "path": "data/simulations/queue_uniform_5.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "uniform",
+      "budget_k": 10,
+      "path": "data/simulations/queue_uniform_10.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "uniform",
+      "budget_k": 15,
+      "path": "data/simulations/queue_uniform_15.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "hard_topk",
+      "budget_k": 5,
+      "path": "data/simulations/queue_hard_topk_5.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "hard_topk",
+      "budget_k": 10,
+      "path": "data/simulations/queue_hard_topk_10.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "hard_topk",
+      "budget_k": 15,
+      "path": "data/simulations/queue_hard_topk_15.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "soft_topk",
+      "budget_k": 5,
+      "path": "data/simulations/queue_soft_topk_5.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "soft_topk",
+      "budget_k": 10,
+      "path": "data/simulations/queue_soft_topk_10.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "soft_topk",
+      "budget_k": 15,
+      "path": "data/simulations/queue_soft_topk_15.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "rank_weighted",
+      "budget_k": 5,
+      "path": "data/simulations/queue_rank_weighted_5.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "rank_weighted",
+      "budget_k": 10,
+      "path": "data/simulations/queue_rank_weighted_10.json"
+    },
+    {
+      "policy_family": "queue",
+      "allocation_family": "rank_weighted",
+      "budget_k": 15,
+      "path": "data/simulations/queue_rank_weighted_15.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "uniform",
+      "budget_k": 5,
+      "path": "data/simulations/structural_uniform_5.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "uniform",
+      "budget_k": 10,
+      "path": "data/simulations/structural_uniform_10.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "uniform",
+      "budget_k": 15,
+      "path": "data/simulations/structural_uniform_15.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "hard_topk",
+      "budget_k": 5,
+      "path": "data/simulations/structural_hard_topk_5.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "hard_topk",
+      "budget_k": 10,
+      "path": "data/simulations/structural_hard_topk_10.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "hard_topk",
+      "budget_k": 15,
+      "path": "data/simulations/structural_hard_topk_15.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "soft_topk",
+      "budget_k": 5,
+      "path": "data/simulations/structural_soft_topk_5.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "soft_topk",
+      "budget_k": 10,
+      "path": "data/simulations/structural_soft_topk_10.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "soft_topk",
+      "budget_k": 15,
+      "path": "data/simulations/structural_soft_topk_15.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "rank_weighted",
+      "budget_k": 5,
+      "path": "data/simulations/structural_rank_weighted_5.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "rank_weighted",
+      "budget_k": 10,
+      "path": "data/simulations/structural_rank_weighted_10.json"
+    },
+    {
+      "policy_family": "structural",
+      "allocation_family": "rank_weighted",
+      "budget_k": 15,
+      "path": "data/simulations/structural_rank_weighted_15.json"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+﻿source_id,source_name,target_id,target_name,mileage_km,distance_status,edge_type,official_link,macro_corridor,transition_count_bothways,data_source_note,is_bidirectional,section
+43,施桥,6,谏壁,1.0,to_verify,cross_corridor_connector,京杭运河主通道南北联络（缺失航段跨接）,京杭主通道,1708,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,京杭主通道
+43,施桥,44,邵伯,20.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,9511,苏北航务管理处官方航道里程，六圩口-邵伯段,1,京杭主通道
+44,邵伯,45,淮安,113.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,8458,江苏省发改委、苏北航务管理处官方权威发布,1,京杭主通道
+45,淮安,22,芒稻,1.0,to_verify,cross_corridor_connector,淮安—芒稻/里下河联络,京杭主通道,1230,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,京杭主通道
+45,淮安,32,高良涧,1.0,to_verify,cross_corridor_connector,淮安—淮河联络,京杭主通道,3394,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,京杭主通道
+45,淮安,46,淮阴,25.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,7148,江苏省发改委、苏北航务管理处官方权威发布,1,京杭主通道
+46,淮阴,47,泗阳,42.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,6708,苏北运河404km全长拆分，宿迁航务中心官方航道区间里程,1,京杭主通道
+47,泗阳,48,刘老涧,22.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,8700,宿迁航务中心官方发布梯级间距,1,京杭主通道
+48,刘老涧,49,宿迁,31.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,9677,宿迁航务中心官方发布梯级间距,1,京杭主通道
+49,宿迁,50,皂河,20.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,10375,宿迁航务中心官方发布梯级间距,1,京杭主通道
+50,皂河,51,刘山,35.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,3480,苏北航务管理处官方航道梯级间距,1,京杭主通道
+51,刘山,52,解台,21.0,retained_from_existing,mainline,京杭运河苏北段,京杭主通道,3317,苏北航务管理处官方航道梯级间距,1,京杭主通道
+52,解台,38,蔺家坝,1.0,to_verify,cross_corridor_connector,京杭运河西航线/徐洪河联络,京杭主通道,3040,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,京杭主通道
+1,秦淮河,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,秦淮新河入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+6,谏壁,7,魏村,1.0,to_verify,gateway_chain,谏壁—魏村沿江口门联络,沿江口门群,1067,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,沿江口门群
+6,谏壁,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,谏壁入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+7,魏村,10,江阴,1.0,to_verify,gateway_chain,魏村—江阴沿江口门联络,沿江口门群,3351,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,沿江口门群
+7,魏村,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,魏村入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+9,前黄,10,江阴,1.0,to_verify,gateway_chain,前黄—江阴 reduced gateway path,沿江口门群,923,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,沿江口门群
+10,江阴,11,张家港,1.0,to_verify,gateway_chain,江阴—张家港沿江口门联络,沿江口门群,785,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,沿江口门群
+10,江阴,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,江阴入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+11,张家港,12,虞山,1.0,to_verify,gateway_chain,申张线（张家港—虞山）,沿江口门群,1944,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,沿江口门群
+11,张家港,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,张家港入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+12,虞山,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,虞山入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+13,杨林,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,杨林塘入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+14,南通,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,南通入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+25,口岸,53,长江干线,1.0,virtual_topology,virtual_yangtze_link,口岸入江口门,沿江口门群,0,虚拟长江干线连接；仅用于增广拓扑表示，不作为物理航道里程。,1,沿江口门群
+33,大柳巷,35,成子河,25.0,retained_from_existing,branch,大柳巷—成子河联络,淮河—徐宿西北网络,2,成子河航道官方全长32.79km拆分,1,淮河—徐宿西北网络
+34,古泊河,35,成子河,18.0,retained_from_existing,branch,古泊河—成子河,淮河—徐宿西北网络,0,宿连航道古泊河-成子河段官方里程,1,淮河—徐宿西北网络
+35,成子河,39,盐灌,22.0,retained_from_existing,cross_corridor_connector,成子河—盐灌联络,淮河—徐宿西北网络,0,成子河-盐灌船闸衔接段官方航道里程,1,淮河—徐宿西北网络
+36,沙集,37,刘集,14.0,retained_from_existing,mainline,徐洪河（沙集—刘集）,淮河—徐宿西北网络,209,徐洪河沙集-刘集段官方航道里程,1,淮河—徐宿西北网络
+37,刘集,38,蔺家坝,16.0,retained_from_existing,mainline,徐洪河（刘集—蔺家坝）,淮河—徐宿西北网络,21,徐洪河刘集-蔺家坝段官方航道里程,1,淮河—徐宿西北网络
+38,蔺家坝,33,大柳巷,20.0,retained_from_existing,cross_corridor_connector,蔺家坝—大柳巷联络,淮河—徐宿西北网络,0,徐洪河蔺家坝-大柳巷段官方航道里程,1,淮河—徐宿西北网络
+39,盐灌,42,善南,12.0,retained_from_existing,mainline,盐灌—善南联络,淮河—徐宿西北网络,5,盐河善南-盐灌段官方航道里程,1,淮河—徐宿西北网络
+40,新沂河,42,善南,1.0,to_verify,mainline,新沂河—善南联络,淮河—徐宿西北网络,2031,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,淮河—徐宿西北网络
+41,云善,42,善南,10.0,retained_from_existing,mainline,连申线（云善—善南）,淮河—徐宿西北网络,1714,连云港市航道维护公告官方里程,1,淮河—徐宿西北网络
+27,阜宁,29,滨海,22.0,retained_from_existing,mainline,阜宁—滨海出海联络,盐河—连申—出海网络,2,连申线黄响河-淮河入海水道段官方33.95km拆分,1,盐河—连申—出海网络
+28,刘庄,27,阜宁,18.0,retained_from_existing,mainline,刘庄—阜宁,盐河—连申—出海网络,84,连申线通榆河刘庄-阜宁段官方里程,1,盐河—连申—出海网络
+30,杨庄,31,朱码,45.85,retained_from_existing,mainline,盐河（杨庄—朱码）,盐河—连申—出海网络,1987,江苏省发改委、交通厅官方发布盐河杨庄-朱码段精确里程,1,盐河—连申—出海网络
+30,杨庄,32,高良涧,30.0,retained_from_existing,cross_corridor_connector,杨庄—高良涧联络,盐河—连申—出海网络,22,苏北灌溉总渠杨庄-高良涧段官方航道里程,1,盐河—连申—出海网络
+31,朱码,28,刘庄,52.0,retained_from_existing,cross_corridor_connector,盐河—刘大线联络,盐河—连申—出海网络,1,连申线通榆河段官方航道养护里程,1,盐河—连申—出海网络
+31,朱码,40,新沂河,1.0,to_verify,cross_corridor_connector,朱码—新沂河联络,盐河—连申—出海网络,1914,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,盐河—连申—出海网络
+1,秦淮河,5,洪蓝,7.0,retained_from_existing,branch,秦淮新河—秦淮河,苏南入江支网,0,秦淮河航道溧水-江宁段官方整治里程拆分,1,苏南入江支网
+1,秦淮河,6,谏壁,1.0,to_verify,cross_corridor_connector,秦淮新河—京杭苏南段联络,苏南入江支网,40,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,苏南入江支网
+2,下坝,3,杨家湾,17.0,reduced_path_provisional,branch,芜申线（下坝—杨家湾）,苏南入江支网,3963,由旧版链式边拆并后的 reduced-path 暂定值，用于替代“经玉带中转”的旧设。,1,苏南入江支网
+2,下坝,4,玉带,8.0,retained_from_existing,branch,划子河/芜申线支联络,苏南入江支网,0,芜申线-天生桥河衔接段官方里程,1,苏南入江支网
+3,杨家湾,6,谏壁,1.0,to_verify,cross_corridor_connector,杨家湾—谏壁（苏南运河联络）,苏南入江支网,204,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,苏南入江支网
+6,谏壁,8,丹金,10.0,retained_from_existing,branch,丹金溧漕河北段,苏南入江支网,1281,丹金溧漕河北段镇江-丹阳官方航道里程,1,苏南入江支网
+8,丹金,9,前黄,12.0,retained_from_existing,branch,丹金/锡溧漕河联络,苏南入江支网,651,丹金溧漕河丹阳-金坛段官方航道里程,1,苏南入江支网
+14,南通,15,九圩港,1.0,to_verify,cross_corridor_connector,南通—九圩港通扬联络,通扬—里下河网络,1215,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,通扬—里下河网络
+15,九圩港,16,海安,1.0,to_verify,mainline,通扬线（九圩港—海安）,通扬—里下河网络,268,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,通扬—里下河网络
+15,九圩港,17,吕四,30.0,retained_from_existing,branch,通吕运河（九圩港—吕四）,通扬—里下河网络,757,通吕运河干线官方里程，含九圩港通江连接段11.63km,1,通扬—里下河网络
+16,海安,18,焦港,15.0,retained_from_existing,cross_corridor_connector,海安—焦港联络,通扬—里下河网络,2127,连申线海安-焦港段官方航道里程,1,通扬—里下河网络
+20,运西,19,宝应,28.0,retained_from_existing,branch,高邮段—盐宝线联络,通扬—里下河网络,3,金宝航线宝应-高邮段官方航道里程,1,通扬—里下河网络
+21,运东,20,运西,8.0,retained_from_existing,branch,高东线—高邮湖联络,通扬—里下河网络,71,高邮湖双线船闸官方间距，通扬线高邮段起点,1,通扬—里下河网络
+22,芒稻,20,运西,15.0,retained_from_existing,branch,芒稻河—高邮段联络,通扬—里下河网络,243,芒稻河-新通扬运河衔接段官方航道里程,1,通扬—里下河网络
+23,樊川,21,运东,35.0,retained_from_existing,branch,樊川—运东联络,通扬—里下河网络,1,通扬线高邮段官方整治全长37.65km拆分,1,通扬—里下河网络
+24,盐邵,23,樊川,10.0,retained_from_existing,branch,盐邵线（盐邵—樊川）,通扬—里下河网络,3,通扬线泰州段官方航道养护里程,1,通扬—里下河网络
+25,口岸,26,周山河,1.0,to_verify,cross_corridor_connector,建口线—周山河联络,通扬—里下河网络,2587,根据官方航线关系+高频相邻过闸转移补入的 reduced-path / connector 边；建议后续再核具体里程。,1,通扬—里下河网络
+26,周山河,24,盐邵,18.0,retained_from_existing,branch,周山河—盐邵联络,通扬—里下河网络,0,盐邵线-周山河衔接段泰州航道公告里程,1,通扬—里下河网络
+32,高良涧,19,宝应,35.0,retained_from_existing,cross_corridor_connector,淮河—宝应联络,通扬—里下河网络,1,金宝航线高良涧-宝应段官方航道里程,1,通扬—里下河网络
