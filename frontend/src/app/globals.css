@@ -14,6 +14,12 @@
   --line: rgba(28, 36, 48, 0.1);
   --accent-blue: #0d5291;
   --accent-copper: #d77223;
+  --font-body:
+    "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC",
+    "Segoe UI", system-ui, sans-serif;
+  --font-display:
+    "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", Georgia,
+    "Times New Roman", serif;
 }
 
 @theme inline {

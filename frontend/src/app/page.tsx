@@ -7,8 +7,14 @@ export default async function Home() {
 
   return (
     <AppShell
-      title="船闸协调摩擦论文演示 Demo"
-      subtitle="这是论文研究的交互式演示网站，用于在真实地图上比较不同政策工具对等待、脆弱性和重点节点的影响。"
+      title={{
+        zh: "船闸侧协调摩擦论文演示",
+        en: "Paper Demo: Lock-Side Coordination Frictions",
+      }}
+      subtitle={{
+        zh: "用于比较连通船闸网络中的固定预算治理反事实情景。",
+        en: "An interactive policy sandbox for comparing fixed-budget governance designs in a connected lock network.",
+      }}
     >
       <PolicyWorkbench mode="dashboard" initialData={initialData} />
     </AppShell>

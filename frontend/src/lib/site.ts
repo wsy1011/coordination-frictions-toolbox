@@ -1,7 +1,7 @@
-export const SITE_TITLE = "船闸协调摩擦政策工具箱 Demo";
+export const SITE_TITLE = "Lock-Side Coordination Frictions Demo";
 export const SITE_DESCRIPTION =
-  "An interactive demonstration website for the paper on lock coordination frictions and policy analysis.";
-export const PAPER_DEMO_LABEL = "论文演示 Demo";
+  "An interactive bilingual policy sandbox for the paper on lock-side coordination frictions, connected spillovers, and fixed-budget governance designs.";
+
 export const AUTHOR_NAME = "Suyang Wang";
 export const AUTHOR_EMAIL = "wangsuyang@hhu.edu.cn";
 

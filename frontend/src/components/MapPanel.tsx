@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 
+import { type LocalizedText, useLocale } from "@/lib/locale";
+import { displayCorridor, displayLockName } from "@/lib/translations";
 import type { LockPoint, NetworkEdge } from "@/types/api";
 
 type MapPanelProps = {
@@ -9,19 +11,21 @@ type MapPanelProps = {
   edges: NetworkEdge[];
   selectedCorridor: string;
   selectedLockId?: number;
-  title: string;
-  subtitle: string;
+  title: LocalizedText;
+  subtitle: LocalizedText;
 };
 
 function buildSrcDoc(
   locks: LockPoint[],
   edges: NetworkEdge[],
+  locale: "zh" | "en",
   selectedLockId?: number,
 ) {
   const payload = JSON.stringify({
     locks,
     edges,
     selectedLockId: selectedLockId ?? null,
+    eventLabel: locale === "zh" ? "事件数" : "Events",
   }).replace(/</g, "\\u003c");
 
   return `<!DOCTYPE html>
@@ -85,7 +89,7 @@ function buildSrcDoc(
       marker.bindPopup(
         '<strong>' + lock.lock_name + '</strong><br/>' +
         (lock.macro_corridor || '') + '<br/>' +
-        'Events: ' + Number(lock.observed_events || 0).toLocaleString()
+        payload.eventLabel + ': ' + Number(lock.observed_events || 0).toLocaleString()
       );
       bounds.push([lock.latitude, lock.longitude]);
       if (isSelected) marker.openPopup();
@@ -107,6 +111,8 @@ export function MapPanel({
   title,
   subtitle,
 }: MapPanelProps) {
+  const { locale, t } = useLocale();
+
   const visibleLocks = useMemo(
     () =>
       locks.filter(
@@ -115,6 +121,16 @@ export function MapPanel({
           (selectedCorridor === "all" || lock.macro_corridor === selectedCorridor),
       ),
     [locks, selectedCorridor],
+  );
+
+  const localizedLocks = useMemo(
+    () =>
+      visibleLocks.map((lock) => ({
+        ...lock,
+        lock_name: displayLockName(lock.lock_name, locale),
+        macro_corridor: displayCorridor(lock.macro_corridor, locale),
+      })),
+    [locale, visibleLocks],
   );
 
   const visibleEdges = useMemo(
@@ -132,23 +148,23 @@ export function MapPanel({
 
   const selectedName = useMemo(() => {
     const selectedLock = visibleLocks.find((lock) => lock.lock_id === selectedLockId);
-    return selectedLock?.lock_name ?? "全部船闸";
-  }, [selectedLockId, visibleLocks]);
+    return selectedLock?.lock_name ?? (locale === "zh" ? "全部船闸" : "All Locks");
+  }, [locale, selectedLockId, visibleLocks]);
 
   const srcDoc = useMemo(
-    () => buildSrcDoc(visibleLocks, visibleEdges, selectedLockId),
-    [selectedLockId, visibleEdges, visibleLocks],
+    () => buildSrcDoc(localizedLocks, visibleEdges, locale, selectedLockId),
+    [locale, localizedLocks, selectedLockId, visibleEdges],
   );
 
   return (
     <section className="overflow-hidden rounded-[30px] border border-[var(--line)] bg-white/92 shadow-[0_18px_45px_rgba(32,42,56,0.10)]">
       <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] px-5 py-4">
         <div>
-          <h3 className="font-[family-name:var(--font-display)] text-xl">{title}</h3>
-          <p className="text-sm text-[var(--ink-600)]">{subtitle}</p>
+          <h3 className="font-[family-name:var(--font-display)] text-xl">{t(title)}</h3>
+          <p className="text-sm text-[var(--ink-600)]">{t(subtitle)}</p>
         </div>
         <div className="rounded-full border border-[var(--line)] bg-[var(--sand-100)] px-4 py-2 text-sm text-[var(--ink-700)]">
-          当前聚焦: {selectedName}
+          {locale === "zh" ? "当前聚焦" : "Current Focus"}: {displayLockName(selectedName, locale)}
         </div>
       </div>
       <iframe

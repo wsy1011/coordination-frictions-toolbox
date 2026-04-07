@@ -7,8 +7,11 @@ export default async function NetworkPage() {
 
   return (
     <AppShell
-      title="网络地图"
-      subtitle="使用真实船闸点位与公开网络连线，查看走廊分组、空间分布和重点节点位置。"
+      title={{ zh: "连通船闸网络", en: "Connected Lock Network" }}
+      subtitle={{
+        zh: "查看区域-功能分组、观测船闸点位和拓扑约束下的直接连通关系。",
+        en: "Inspect regional-functional groups, observed lock locations, and topology-constrained connected links.",
+      }}
     >
       <PolicyWorkbench mode="network" initialData={initialData} />
     </AppShell>
