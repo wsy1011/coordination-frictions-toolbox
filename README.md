@@ -1,31 +1,58 @@
-# Coordination Frictions Toolbox Demo
+# Lock-Side Coordination Frictions Demo
 
-一个独立于原研究仓库的交互式论文演示网站。
+An interactive bilingual policy sandbox for the paper on lock-side coordination frictions, connected spillovers, and fixed-budget governance designs.
 
-- 论文演示 Demo 标题: `船闸协调摩擦政策工具箱 Demo`
-- 作者: `Suyang Wang`
-- 邮箱: `wangsuyang@hhu.edu.cn`
+This repository is a standalone demo website. It is intentionally separated from the upstream research repository and only uses aggregate demo snapshots or read-only data adapters. It does not publish event-level lock-passage records.
 
-## 项目定位
+## Live Demo
 
-这个项目是论文研究的网页化 Demo，用于在真实地图上展示船闸网络、政策参数调节、重点对象识别和聚合结果对比。
+If GitHub Pages is enabled for this repository, the static demo is available at:
 
-它遵循两个原则：
+[https://wsy1011.github.io/coordination-frictions-toolbox/](https://wsy1011.github.io/coordination-frictions-toolbox/)
 
-- 不修改上游研究项目中的任何受版本控制文件
-- 公开版只展示聚合结果和演示副本，不暴露事件级原始数据
+## Author
 
-## 目录
+Suyang Wang
 
-- `frontend/`: Next.js 前端
-- `backend/`: FastAPI 后端
-- `adapters/`: 数据同步与静态快照脚本
-- `data/demo/`: Demo 模式使用的数据副本
-- `docs/`: 设计与部署文档
+- Affiliation: Hohai University
+- Location: Nanjing, China
+- Email: [wangsuyang@hhu.edu.cn](mailto:wangsuyang@hhu.edu.cn)
+- GitHub: [github.com/wsy1011](https://github.com/wsy1011)
+- ResearchGate: [researchgate.net/profile/Suyang-Wang-6](https://www.researchgate.net/profile/Suyang-Wang-6)
+- ORCID: [0009-0002-8499-1181](https://orcid.org/0009-0002-8499-1181)
 
-## 本地运行
+## What This Demo Does
 
-### 1. 启动后端
+- Shows a connected lock network with observed lock locations on a real map.
+- Provides a bilingual English/Chinese frontend.
+- Compares fixed-budget governance designs in a policy sandbox.
+- Supports queue-policy and structural-reallocation policy objects.
+- Shows targeting indices and lock-level pre-dispatch waiting changes.
+- Supports static GitHub Pages deployment using exported JSON snapshots.
+
+## What This Demo Does Not Do
+
+- It does not expose event-level raw lock-passage data.
+- It does not provide real-time dispatching or operational scheduling.
+- It does not modify the upstream research project.
+- It does not re-estimate the paper's empirical specification inside the browser.
+
+## Repository Structure
+
+```text
+coordination-frictions-toolbox/
+  adapters/                 # Data sync and static-payload export scripts
+  backend/                  # FastAPI backend for local demo/private mode
+  data/demo/                # Demo snapshots and aggregate data
+  docs/                     # Project notes and documentation
+  exports/                  # Local exports and logs
+  frontend/                 # Next.js frontend
+  .github/workflows/        # GitHub Pages deployment workflow
+```
+
+## Local Development
+
+### 1. Start the backend
 
 ```powershell
 cd D:\Code\coordination-frictions-toolbox
@@ -35,7 +62,11 @@ python -m venv .venv
 .venv\Scripts\python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
 ```
 
-### 2. 启动前端
+The health check should be available at:
+
+[http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
+
+### 2. Start the frontend
 
 ```powershell
 cd D:\Code\coordination-frictions-toolbox\frontend
@@ -44,69 +75,80 @@ npm install
 npm run dev -- --hostname 127.0.0.1 --port 3001
 ```
 
-访问 [http://127.0.0.1:3001](http://127.0.0.1:3001)。
+Open:
 
-## GitHub Pages 静态发布
+[http://127.0.0.1:3001](http://127.0.0.1:3001)
 
-这套 Demo 可以发布成 GitHub 静态网站，但推荐走“静态快照”模式，而不是把 FastAPI 一起搬到 GitHub Pages。
+## Static GitHub Pages Deployment
 
-### 1. 导出静态数据快照
+GitHub Pages only serves static files, so the demo uses a static-snapshot mode instead of running FastAPI on GitHub.
+
+### 1. Export static data payloads
 
 ```powershell
 cd D:\Code\coordination-frictions-toolbox
 .venv\Scripts\python adapters\export_static_payloads.py
 ```
 
-导出后会生成：
+This generates static JSON files under:
 
-- `frontend/public/data/corridors.json`
-- `frontend/public/data/network.json`
-- `frontend/public/data/baseline-overview.json`
-- `frontend/public/data/rankings.json`
-- `frontend/public/data/simulations/*.json`
+```text
+frontend/public/data/
+```
 
-### 2. 构建静态站点
+### 2. Build the static frontend locally
 
 ```powershell
 cd D:\Code\coordination-frictions-toolbox\frontend
 $env:NEXT_PUBLIC_STATIC_MODE="true"
 $env:STATIC_EXPORT="true"
-$env:GITHUB_REPO_NAME="<your-repo-name>"
-$env:NEXT_PUBLIC_BASE_PATH="/<your-repo-name>"
+$env:GITHUB_REPO_NAME="coordination-frictions-toolbox"
+$env:NEXT_PUBLIC_BASE_PATH="/coordination-frictions-toolbox"
 npm install
 npm run build
 ```
 
-构建产物会输出为可部署到 GitHub Pages 的静态文件。
+The static output is written to:
 
-### 3. 启用自动部署
+```text
+frontend/out/
+```
 
-仓库里已经包含 GitHub Pages 工作流：
+### 3. Deploy with GitHub Actions
 
-- [.github/workflows/deploy-pages.yml](D:/Code/coordination-frictions-toolbox/.github/workflows/deploy-pages.yml)
+This repository includes:
 
-它会自动完成：
+[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)
 
-1. 安装 Python 和 Node
-2. 导出 `frontend/public/data` 下的静态 JSON 快照
-3. 以静态模式构建 Next.js
-4. 发布 `frontend/out` 到 GitHub Pages
+To enable deployment:
 
-在 GitHub 上只需要做两步：
+1. Push to the `main` branch.
+2. Go to `Settings -> Pages` in the GitHub repository.
+3. Set `Build and deployment` to `GitHub Actions`.
+4. Re-run the `Deploy GitHub Pages` workflow if needed.
 
-1. 把默认分支设为 `main`
-2. 进入 `Settings -> Pages`，在 `Build and deployment` 里选择 `GitHub Actions`
+## Runtime Modes
 
-之后每次推送到 `main`，GitHub Pages 都会自动更新。
+The main environment variables are:
 
-## 运行模式
+```text
+APP_MODE=demo|private
+SOURCE_PROJECT_DIR=<read-only upstream research project path>
+PRIVATE_DATA_DIR=<restricted local/private data directory>
+MAP_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png
+MIN_DISCLOSURE_THRESHOLD=10
+NEXT_PUBLIC_STATIC_MODE=true|false
+NEXT_PUBLIC_BASE_PATH=/coordination-frictions-toolbox
+```
 
-- `APP_MODE=demo`: 使用 `data/demo/` 中的演示副本
-- `APP_MODE=private`: 通过只读方式接入 `PRIVATE_DATA_DIR` 或 `SOURCE_PROJECT_DIR`
-- `NEXT_PUBLIC_STATIC_MODE=true`: 前端改为读取 `public/data/*.json` 静态快照
+`demo` mode uses aggregate demo data and static snapshots. `private` mode is intended for local or intranet use with restricted data directories and should remain read-only with respect to upstream research assets.
 
-## 说明
+## Data Boundary
 
-- 这个工具用于论文演示和辅助分析，不替代最终政策决策
-- 公开 Demo 用于展示方法和交互，不代表受限真实数据上的全部结果
-- GitHub Pages 适合发布论文 Demo、地图交互和预计算情景，不适合实时模拟或私有数据访问
+The public repository is designed for method communication and interface demonstration. It may contain demo snapshots and aggregate outputs, but it should not contain restricted event-level lock-passage data.
+
+For public deployment, use GitHub Pages static mode and avoid committing private raw data, local logs, or restricted exports.
+
+## License
+
+This project uses the MIT License. See [LICENSE](LICENSE).
