@@ -18,7 +18,7 @@ import type {
   RankingsResponse,
   SimulationResponse,
 } from "@/types/api";
-import { BarChartPanel, DoughnutChartPanel } from "./ChartPanel";
+import { BarChartPanel } from "./ChartPanel";
 import { MapPanel } from "./MapPanel";
 import { MetricCard } from "./MetricCard";
 
@@ -175,10 +175,6 @@ export function PolicyWorkbench({
     );
   }
 
-  const stateShareData = Object.entries(baseline.state_shares).map(([name, value]) => ({
-    name,
-    value,
-  }));
   const priorityImpactLocks = [...simulation.impact_locks]
     .sort((left, right) => Math.abs(right.delta_wait1_min) - Math.abs(left.delta_wait1_min))
     .slice(0, 5);
@@ -384,14 +380,46 @@ export function PolicyWorkbench({
                 values={priorityValues}
                 color="#0d5291"
               />
-              <DoughnutChartPanel
-                title={t({ zh: "基线状态分布", en: "Baseline State Distribution" })}
-                subtitle={t({
-                  zh: "旧工具箱状态变量保留为演示层，用于显示连通系统中的脆弱结构。",
-                  en: "The legacy toolbox state variables remain as demo-layer indicators of fragile connected structures.",
-                })}
-                items={stateShareData}
-              />
+              <section className="rounded-[24px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
+                <div className="mb-4">
+                  <h3 className="font-[family-name:var(--font-display)] text-xl">
+                    {t({ zh: "论文证据链", en: "Paper Evidence Chain" })}
+                  </h3>
+                  <p className="text-sm leading-6 text-[var(--ink-600)]">
+                    {t({
+                      zh: "这里只保留新论文中实际报告的证据层，不再展示旧工具箱状态变量。",
+                      en: "This panel keeps only evidence layers reported in the revised paper and no longer shows legacy toolbox state variables.",
+                    })}
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    {
+                      zh: "AIS operating states: cruising, approach, low-speed manoeuvring, waiting or loitering.",
+                      en: "AIS operating states: cruising, approach, low-speed manoeuvring, waiting or loitering.",
+                    },
+                    {
+                      zh: `行政记录: ${paperMetrics.rows.toLocaleString()} 条过闸记录，${paperMetrics.pressureRows.toLocaleString()} 条保留压力协变量。`,
+                      en: `Administrative records: ${paperMetrics.rows.toLocaleString()} lock-passage rows, ${paperMetrics.pressureRows.toLocaleString()} with pressure covariates.`,
+                    },
+                    {
+                      zh: "Dispatch hazard: 本地队列压力降低放行强度，走廊压力提高放行强度。",
+                      en: "Dispatch hazard: local queue pressure lowers release intensity, while corridor pressure raises it.",
+                    },
+                    {
+                      zh: "Grouped CO2: 作为等待相关运行环境的环境后果证据，而不是主因果结论。",
+                      en: "Grouped CO2: supporting consequence evidence for waiting-related operating environments, not the main causal claim.",
+                    },
+                  ].map((item) => (
+                    <p
+                      key={item.en}
+                      className="rounded-2xl border border-[var(--line)] bg-[var(--sand-100)] px-4 py-3 text-sm leading-7 text-[var(--ink-700)]"
+                    >
+                      {t(item)}
+                    </p>
+                  ))}
+                </div>
+              </section>
               <BarChartPanel
                 title={t({ zh: "优先船闸的等待变化", en: "Waiting Changes for Priority Locks" })}
                 subtitle={t({
