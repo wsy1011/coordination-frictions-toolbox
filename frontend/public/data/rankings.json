@@ -3,7 +3,7 @@
     {
       "cur_lock_id": 13,
       "lock_name": "杨林",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "beta_q_pos": 0.9065236496316688,
       "beta_nq_pos": 0.4924909699166749,
       "throughflow_index": 0.5738088074565693,
@@ -40,7 +40,7 @@
     {
       "cur_lock_id": 14,
       "lock_name": "南通",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "beta_q_pos": 0.8894623757798369,
       "beta_nq_pos": 0.0,
       "throughflow_index": 0.5078117087237912,
@@ -188,7 +188,7 @@
     {
       "cur_lock_id": 11,
       "lock_name": "张家港",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "beta_q_pos": 0.2756366247754422,
       "beta_nq_pos": 0.0,
       "throughflow_index": 0.8229049994153546,
@@ -262,7 +262,7 @@
     {
       "cur_lock_id": 12,
       "lock_name": "虞山",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "beta_q_pos": 0.5693367441658337,
       "beta_nq_pos": 0.0,
       "throughflow_index": 0.6395079792485374,
@@ -782,7 +782,7 @@
     {
       "cur_lock_id": 13,
       "lock_name": "杨林",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "beta_q_pos": 0.9065236496316688,
       "beta_nq_pos": 0.4924909699166749,
       "throughflow_index": 0.5738088074565693,
@@ -893,7 +893,7 @@
     {
       "cur_lock_id": 14,
       "lock_name": "南通",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "beta_q_pos": 0.8894623757798369,
       "beta_nq_pos": 0.0,
       "throughflow_index": 0.5078117087237912,
@@ -1115,7 +1115,7 @@
     {
       "cur_lock_id": 12,
       "lock_name": "虞山",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "beta_q_pos": 0.5693367441658337,
       "beta_nq_pos": 0.0,
       "throughflow_index": 0.6395079792485374,

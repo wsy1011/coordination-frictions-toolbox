@@ -25,16 +25,29 @@ import { MetricCard } from "./MetricCard";
 type PolicyFamily = "queue" | "structural";
 type AllocationFamily = "uniform" | "hard_topk" | "soft_topk" | "rank_weighted";
 
+const paperMetrics = {
+  rows: 215133,
+  pressureRows: 185224,
+  meanPreDispatchMin: 547.89,
+  medianPreDispatchMin: 264.72,
+  cpHazardChangePct: 36.1,
+  lqHazardChangePct: -49.6,
+  co2Cells: 36,
+  co2R2: 0.795,
+  uniformMeanReductionMin: 10.54,
+  localTargetMeanReductionMin: 30.23,
+};
+
 const allocationLabels: Record<AllocationFamily, LocalizedText> = {
-  uniform: { zh: "普遍治理", en: "Uniform" },
+  uniform: { zh: "统一分配", en: "Uniform" },
   hard_topk: { zh: "硬 Top-K", en: "Hard Top-K" },
   soft_topk: { zh: "软 Top-K", en: "Soft Top-K" },
   rank_weighted: { zh: "按风险加权", en: "Risk Weighted" },
 };
 
 const policyLabels: Record<PolicyFamily, LocalizedText> = {
-  queue: { zh: "队列政策", en: "Queue policy" },
-  structural: { zh: "结构再分配政策", en: "Structural reallocation policy" },
+  queue: { zh: "直接负担缓解", en: "Direct burden relief" },
+  structural: { zh: "连通瓶颈监管", en: "Connected-bottleneck supervision" },
 };
 
 export function PolicyWorkbench({
@@ -133,12 +146,13 @@ export function PolicyWorkbench({
 
   if (loading) {
     return (
-      <section className="rounded-[30px] border border-[var(--line)] bg-white/90 px-6 py-16 text-center shadow-[0_18px_45px_rgba(32,42,56,0.08)]">
-        <p className="text-sm uppercase tracking-[0.35em] text-[var(--ink-500)]">Loading</p>
+      <section className="rounded-[24px] border border-[var(--line)] bg-white/90 px-6 py-16 text-center shadow-[0_18px_45px_rgba(32,42,56,0.08)]">
+        <p className="text-sm uppercase tracking-[0.24em] text-[var(--ink-500)]">Loading</p>
         <p className="mt-4 font-[family-name:var(--font-display)] text-3xl text-[var(--ink-900)]">
-          {locale === "zh"
-            ? "正在加载政策沙盘、网络数据和重点对象榜单"
-            : "Loading the policy sandbox, network data, and targeting indices"}
+          {t({
+            zh: "正在加载政策沙盘、网络数据和治理优先级",
+            en: "Loading the policy sandbox, network data, and governance priorities",
+          })}
         </p>
       </section>
     );
@@ -146,21 +160,21 @@ export function PolicyWorkbench({
 
   if (error || !network || !baseline || !simulation) {
     return (
-      <section className="rounded-[30px] border border-[var(--line)] bg-[#fff5f1] px-6 py-12 text-center shadow-[0_18px_45px_rgba(32,42,56,0.08)]">
+      <section className="rounded-[24px] border border-[var(--line)] bg-[#fff5f1] px-6 py-12 text-center shadow-[0_18px_45px_rgba(32,42,56,0.08)]">
         <p className="font-[family-name:var(--font-display)] text-2xl text-[#842c1a]">
-          {locale === "zh" ? "接口暂时不可用" : "The interface is temporarily unavailable"}
+          {t({ zh: "界面暂时不可用", en: "The interface is temporarily unavailable" })}
         </p>
         <p className="mt-2 text-sm text-[#842c1a]">
           {error ??
-            (locale === "zh"
-              ? "请先启动 FastAPI 后端，再刷新前端页面。"
-              : "Please start the FastAPI backend and refresh the frontend page.")}
+            t({
+              zh: "请先启动 FastAPI 后端，或确认静态 JSON 已导出。",
+              en: "Please start the FastAPI backend or confirm that static JSON payloads have been exported.",
+            })}
         </p>
       </section>
     );
   }
 
-  const headline = baseline.headline;
   const stateShareData = Object.entries(baseline.state_shares).map(([name, value]) => ({
     name,
     value,
@@ -169,7 +183,7 @@ export function PolicyWorkbench({
     .sort((left, right) => Math.abs(right.delta_wait1_min) - Math.abs(left.delta_wait1_min))
     .slice(0, 5);
   const priorityLabels = priorityImpactLocks.map((item) => displayLockName(item.lock_name, locale));
-  const priorityValues = priorityImpactLocks.map((item) => item.delta_wait1_min);
+  const priorityValues = priorityImpactLocks.map((item) => Math.abs(item.delta_wait1_min));
   const impactLabels = simulation.impact_locks.map((item) => displayLockName(item.lock_name, locale));
   const impactValues = simulation.impact_locks.map((item) => item.delta_wait1_min);
 
@@ -177,15 +191,15 @@ export function PolicyWorkbench({
     return (
       <section className="grid gap-6 xl:grid-cols-2">
         <RankingsList
-          title={{ zh: "队列风险优先级", en: "Queue-risk governance priorities" }}
+          title={{ zh: "直接负担缓解优先级", en: "Direct-Burden Relief Priorities" }}
           items={rankings.queue}
-          metricLabel={{ zh: "队列风险", en: "Queue Risk" }}
+          metricLabel={{ zh: "直接负担指数", en: "Burden Index" }}
           metricKey="queue_risk_score"
         />
         <RankingsList
-          title={{ zh: "结构风险优先级", en: "Structural-risk governance priorities" }}
+          title={{ zh: "连通瓶颈监管优先级", en: "Connected-Bottleneck Priorities" }}
           items={rankings.structural}
-          metricLabel={{ zh: "结构风险", en: "Structural Risk" }}
+          metricLabel={{ zh: "连通瓶颈指数", en: "Connected Index" }}
           metricKey="structural_risk_score"
         />
       </section>
@@ -196,58 +210,54 @@ export function PolicyWorkbench({
     <div className="flex flex-col gap-6">
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
-          label={locale === "zh" ? "平均预调度等待" : "Mean pre-dispatch waiting"}
-          value={`${headline.expected_wait1.toFixed(2)} h`}
-          helper={
-            locale === "zh"
-              ? "基于基线情景的期望一程等待时间"
-              : "Expected first-leg waiting time under the baseline scenario"
-          }
+          label={t({ zh: "平均 pre-dispatch 负担", en: "Mean Pre-dispatch Burden" })}
+          value={`${paperMetrics.meanPreDispatchMin.toFixed(1)} min`}
+          helper={t({
+            zh: `${paperMetrics.rows.toLocaleString()} 条行政分析记录；中位数 ${paperMetrics.medianPreDispatchMin.toFixed(1)} 分钟。`,
+            en: `${paperMetrics.rows.toLocaleString()} administrative rows; median ${paperMetrics.medianPreDispatchMin.toFixed(1)} minutes.`,
+          })}
         />
         <MetricCard
-          label={locale === "zh" ? "平均总等待" : "Mean total waiting"}
-          value={`${headline.expected_wait_total.toFixed(2)} h`}
-          helper={
-            locale === "zh"
-              ? "用于衡量系统层面的综合协调摩擦"
-              : "Used to capture aggregate coordination frictions"
-          }
+          label={t({ zh: "走廊压力 IQR hazard 变化", en: "Corridor-Pressure IQR Hazard Shift" })}
+          value={`+${paperMetrics.cpHazardChangePct.toFixed(1)}%`}
+          helper={t({
+            zh: "CP 从第 25 分位到第 75 分位，放行强度提高；本地队列压力为 -49.6%。",
+            en: "CP moving from the 25th to 75th percentile raises release intensity; local queue pressure is -49.6%.",
+          })}
         />
         <MetricCard
-          label={locale === "zh" ? "低效率状态占比" : "Low-efficiency-state share"}
-          value={`${(headline.low_eff_share * 100).toFixed(1)}%`}
-          helper={
-            locale === "zh"
-              ? "显示持续低效率状态在样本中的占比"
-              : "Shows the share of observations in persistent low-efficiency states"
-          }
+          label={t({ zh: "分组 CO2 模型", en: "Grouped CO2 Model" })}
+          value={`R² ${paperMetrics.co2R2.toFixed(3)}`}
+          helper={t({
+            zh: `${paperMetrics.co2Cells} 个分组单元，作为环境相关性的配套证据。`,
+            en: `${paperMetrics.co2Cells} grouped cells, used as supporting environmental consequence evidence.`,
+          })}
         />
         <MetricCard
-          label={locale === "zh" ? "State 4 占比" : "State 4 Share"}
-          value={`${(headline.state4_share * 100).toFixed(1)}%`}
-          helper={
-            locale === "zh"
-              ? "衡量系统暴露在最脆弱状态下的程度"
-              : "Tracks the system exposure to the most fragile state"
-          }
+          label={t({ zh: "固定容量 benchmark", en: "Fixed-Capacity Benchmark" })}
+          value={`${paperMetrics.localTargetMeanReductionMin.toFixed(1)} min`}
+          helper={t({
+            zh: `本地负担 targeted 规则；统一分配为 ${paperMetrics.uniformMeanReductionMin.toFixed(1)} 分钟。`,
+            en: `Local-burden targeted rule; uniform allocation is ${paperMetrics.uniformMeanReductionMin.toFixed(1)} minutes.`,
+          })}
         />
       </section>
 
       <div className={mode === "dashboard" ? "grid gap-6 xl:grid-cols-[360px_1fr]" : "grid gap-6"}>
         {mode === "dashboard" && (
-          <aside className="rounded-[30px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_18px_45px_rgba(32,42,56,0.08)]">
+          <aside className="rounded-[24px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_18px_45px_rgba(32,42,56,0.08)]">
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-[var(--ink-500)]">
-                {locale === "zh" ? "政策评价控制" : "Policy evaluation controls"}
+              <p className="text-xs uppercase tracking-[0.24em] text-[var(--ink-500)]">
+                {t({ zh: "政策评估控制", en: "Policy Evaluation Controls" })}
               </p>
               <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl">
-                {locale === "zh" ? "设定固定预算情景" : "Configure fixed-budget design"}
+                {t({ zh: "设定固定容量情景", en: "Configure Fixed-Capacity Design" })}
               </h2>
             </div>
             <div className="mt-6 space-y-5">
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-[var(--ink-700)]">
-                  {locale === "zh" ? "治理对象" : "Governance object"}
+                  {t({ zh: "治理对象", en: "Governance Object" })}
                 </span>
                 <select
                   className="w-full rounded-2xl border border-[var(--line)] bg-[var(--sand-100)] px-4 py-3"
@@ -264,7 +274,7 @@ export function PolicyWorkbench({
               </label>
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-[var(--ink-700)]">
-                  {locale === "zh" ? "分配规则" : "Allocation rule"}
+                  {t({ zh: "分配规则", en: "Allocation Rule" })}
                 </span>
                 <select
                   className="w-full rounded-2xl border border-[var(--line)] bg-[var(--sand-100)] px-4 py-3"
@@ -284,7 +294,7 @@ export function PolicyWorkbench({
               </label>
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-[var(--ink-700)]">
-                  {locale === "zh" ? "预算 K" : "Budget K"}
+                  {t({ zh: "预算 K", en: "Budget K" })}
                 </span>
                 <input
                   className="w-full accent-[var(--accent-blue)]"
@@ -302,14 +312,14 @@ export function PolicyWorkbench({
                 <div className="mt-2 flex items-center justify-between text-sm text-[var(--ink-600)]">
                   <span>5</span>
                   <span className="rounded-full bg-[var(--sand-200)] px-3 py-1 font-medium text-[var(--ink-800)]">
-                    {locale === "zh" ? `当前: ${budgetK}` : `Current: ${budgetK}`}
+                    {t({ zh: `当前: ${budgetK}`, en: `Current: ${budgetK}` })}
                   </span>
                   <span>15</span>
                 </div>
               </label>
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-[var(--ink-700)]">
-                  {locale === "zh" ? "走廊筛选" : "Corridor Filter"}
+                  {t({ zh: "区域筛选", en: "Corridor Filter" })}
                 </span>
                 <select
                   className="w-full rounded-2xl border border-[var(--line)] bg-[var(--sand-100)] px-4 py-3"
@@ -319,7 +329,7 @@ export function PolicyWorkbench({
                     setSelectedLockId(undefined);
                   }}
                 >
-                  <option value="all">{locale === "zh" ? "全部走廊" : "All Corridors"}</option>
+                  <option value="all">{t({ zh: "全部区域", en: "All Groups" })}</option>
                   {corridors.map((item) => (
                     <option key={item.macro_corridor} value={item.macro_corridor}>
                       {displayCorridor(item.macro_corridor, locale)}
@@ -328,20 +338,20 @@ export function PolicyWorkbench({
                 </select>
               </label>
             </div>
-            <div className="mt-6 rounded-[24px] bg-[var(--ink-900)] p-5 text-[var(--sand-100)]">
-              <p className="text-xs uppercase tracking-[0.28em] text-[var(--sand-300)]">
-                {locale === "zh" ? "当前情景" : "Selected Scenario"}
+            <div className="mt-6 rounded-[20px] bg-[var(--ink-900)] p-5 text-[var(--sand-100)]">
+              <p className="text-xs uppercase tracking-[0.24em] text-[var(--sand-300)]">
+                {t({ zh: "当前情景", en: "Selected Scenario" })}
               </p>
               <h3 className="mt-2 font-[family-name:var(--font-display)] text-2xl">
                 {simulation.selection.scenario}
               </h3>
               <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <p className="text-[var(--sand-300)]">{locale === "zh" ? "等待变化" : "Wait Delta"}</p>
+                  <p className="text-[var(--sand-300)]">{t({ zh: "平均变化", en: "Mean Delta" })}</p>
                   <p className="mt-1 text-lg">{Number(simulation.summary.delta_wait1 ?? 0).toFixed(3)}</p>
                 </div>
                 <div>
-                  <p className="text-[var(--sand-300)]">{locale === "zh" ? "P90 变化" : "P90 Delta"}</p>
+                  <p className="text-[var(--sand-300)]">{t({ zh: "P90 变化", en: "P90 Delta" })}</p>
                   <p className="mt-1 text-lg">{Number(simulation.summary.delta_p90_wait1 ?? 0).toFixed(3)}</p>
                 </div>
               </div>
@@ -355,60 +365,50 @@ export function PolicyWorkbench({
             edges={network.edges}
             selectedCorridor={selectedCorridor}
             selectedLockId={selectedLockId}
-            title={{
-              zh: "真实船闸网络地图",
-              en: "Connected lock network map",
-            }}
+            title={{ zh: "真实船闸网络地图", en: "Connected Lock Network Map" }}
             subtitle={{
-              zh: "真实坐标点位来自公开副本，线条表示网络连接和协调关系。",
-              en: "Real coordinates come from the public demo snapshot, and the lines represent network connectivity and coordination links.",
+              zh: "坐标来自公开演示快照；连线表示拓扑约束下的船闸连通关系。",
+              en: "Coordinates come from the public demo snapshot; lines represent topology-constrained connected lock links.",
             }}
           />
 
           {mode === "dashboard" && (
             <div className="grid gap-6 xl:grid-cols-2">
               <BarChartPanel
-                title={
-                  locale === "zh" ? "当前情景下变化最大的船闸" : "Largest lock-level changes in the current scenario"
-                }
-                subtitle={
-                  locale === "zh"
-                    ? "按当前情景下一程等待变化幅度排序，政策类型、分配方式和预算 K 都会联动更新。"
-                    : "Sorted by the magnitude of pre-dispatch waiting change under the current counterfactual. Governance object, allocation rule, and budget K all update this panel."
-                }
+                title={t({ zh: "当前情景下变化最大的船闸", en: "Largest Lock-Level Changes in the Current Scenario" })}
+                subtitle={t({
+                  zh: "按 pre-dispatch waiting 变化幅度排序；治理对象、分配规则和预算 K 会联动更新。",
+                  en: "Sorted by the magnitude of pre-dispatch waiting change; governance object, allocation rule, and budget K update this panel.",
+                })}
                 labels={priorityLabels}
                 values={priorityValues}
                 color="#0d5291"
               />
               <DoughnutChartPanel
-                title={locale === "zh" ? "系统状态分布" : "System State Distribution"}
-                subtitle={
-                  locale === "zh"
-                    ? "基线状态份额帮助快速识别高脆弱性结构。"
-                    : "Baseline state shares help identify highly fragile structures at a glance"
-                }
+                title={t({ zh: "基线状态分布", en: "Baseline State Distribution" })}
+                subtitle={t({
+                  zh: "旧工具箱状态变量保留为演示层，用于显示连通系统中的脆弱结构。",
+                  en: "The legacy toolbox state variables remain as demo-layer indicators of fragile connected structures.",
+                })}
                 items={stateShareData}
               />
               <BarChartPanel
-                title={locale === "zh" ? "优先船闸的预调度等待变化" : "Pre-dispatch waiting changes for priority locks"}
-                subtitle={
-                  locale === "zh"
-                    ? "当前政策情景下，重点船闸的一程等待变化。"
-                    : "Lock-level changes in expected pre-dispatch waiting under the current governance counterfactual"
-                }
+                title={t({ zh: "优先船闸的等待变化", en: "Waiting Changes for Priority Locks" })}
+                subtitle={t({
+                  zh: "当前固定容量情景下重点船闸的 pre-dispatch waiting 变化。",
+                  en: "Pre-dispatch waiting changes for priority locks under the selected fixed-capacity scenario.",
+                })}
                 labels={impactLabels}
                 values={impactValues}
                 color="#d77223"
               />
-              <section className="rounded-[28px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
+              <section className="rounded-[24px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
                 <div>
                   <h3 className="font-[family-name:var(--font-display)] text-xl">
-                    {locale === "zh" ? "治理优先级列表" : "Targeting index list"}
+                    {t({ zh: "治理优先级列表", en: "Targeting Index List" })}
                   </h3>
                   <p className="text-sm text-[var(--ink-600)]">
-                    {locale === "zh"
-                      ? "点击船闸名称可将地图聚焦到对应船闸。"
-                      : "Click a lock name to focus the map on that lock."}
+                    {t({ zh: "点击船闸名称可在地图上聚焦。", en: "Click a lock name to focus the map." })}
                   </p>
                 </div>
                 <div className="mt-4 space-y-3">
@@ -420,16 +420,12 @@ export function PolicyWorkbench({
                       className="flex w-full items-center justify-between rounded-2xl border border-[var(--line)] bg-[var(--sand-100)] px-4 py-3 text-left transition hover:border-[var(--accent-blue)] hover:bg-white"
                     >
                       <div>
-                        <p className="font-medium text-[var(--ink-900)]">
-                          {displayLockName(item.lock_name, locale)}
-                        </p>
-                        <p className="text-sm text-[var(--ink-600)]">
-                          {displayCorridor(item.corridor, locale)}
-                        </p>
+                        <p className="font-medium text-[var(--ink-900)]">{displayLockName(item.lock_name, locale)}</p>
+                        <p className="text-sm text-[var(--ink-600)]">{displayCorridor(item.corridor, locale)}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs uppercase tracking-[0.24em] text-[var(--ink-500)]">
-                          {locale === "zh" ? "排名" : "Rank"}
+                        <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-500)]">
+                          {t({ zh: "排名", en: "Rank" })}
                         </p>
                         <p className="font-[family-name:var(--font-display)] text-2xl">
                           {policyFamily === "queue" ? item.queue_rank : item.structural_rank}
@@ -444,9 +440,9 @@ export function PolicyWorkbench({
 
           {mode === "network" && (
             <section className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
-              <section className="rounded-[28px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
+              <section className="rounded-[24px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
                 <h3 className="font-[family-name:var(--font-display)] text-xl">
-                  {locale === "zh" ? "区域-功能分组覆盖" : "Regional-functional group coverage"}
+                  {t({ zh: "区域-功能分组覆盖", en: "Regional-Functional Group Coverage" })}
                 </h3>
                 <div className="mt-4 space-y-3">
                   {corridors.map((corridor) => (
@@ -459,9 +455,10 @@ export function PolicyWorkbench({
                           {displayCorridor(corridor.macro_corridor, locale)}
                         </p>
                         <p className="text-sm text-[var(--ink-600)]">
-                          {locale === "zh"
-                            ? `${corridor.visible_points}/${corridor.lock_count} 个点位可视`
-                            : `${corridor.visible_points}/${corridor.lock_count} visible lock points`}
+                          {t({
+                            zh: `${corridor.visible_points}/${corridor.lock_count} 个点位可见`,
+                            en: `${corridor.visible_points}/${corridor.lock_count} visible lock points`,
+                          })}
                         </p>
                       </div>
                       <p className="font-[family-name:var(--font-display)] text-2xl text-[var(--accent-blue)]">
@@ -471,29 +468,25 @@ export function PolicyWorkbench({
                   ))}
                 </div>
               </section>
-              <section className="rounded-[28px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
+              <section className="rounded-[24px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
                 <h3 className="font-[family-name:var(--font-display)] text-xl">
-                  {locale === "zh" ? "观测船闸节点" : "Observed lock nodes"}
+                  {t({ zh: "观测船闸节点", en: "Observed Lock Nodes" })}
                 </h3>
                 <div className="mt-4 max-h-[420px] space-y-3 overflow-auto pr-1">
                   {filteredLocks.slice(0, 18).map((lock) => (
-                    <div
-                      key={lock.lock_id}
-                      className="rounded-2xl border border-[var(--line)] bg-[var(--sand-100)] px-4 py-3"
-                    >
-                      <div className="flex items-center justify-between">
+                    <div key={lock.lock_id} className="rounded-2xl border border-[var(--line)] bg-[var(--sand-100)] px-4 py-3">
+                      <div className="flex items-center justify-between gap-3">
                         <p className="font-medium">{displayLockName(lock.lock_name, locale)}</p>
                         <button
                           type="button"
                           onClick={() => setSelectedLockId(lock.lock_id)}
                           className="rounded-full border border-[var(--line)] px-3 py-1 text-xs text-[var(--ink-700)] hover:border-[var(--accent-blue)] hover:text-[var(--accent-blue)]"
                         >
-                          {locale === "zh" ? "聚焦地图" : "Focus Map"}
+                          {t({ zh: "聚焦地图", en: "Focus Map" })}
                         </button>
                       </div>
                       <p className="mt-1 text-sm text-[var(--ink-600)]">
-                        {displayCorridor(lock.macro_corridor, locale)} ·{" "}
-                        {displayRoute(lock.official_route, locale)}
+                        {displayCorridor(lock.macro_corridor, locale)} / {displayRoute(lock.official_route, locale)}
                       </p>
                     </div>
                   ))}
@@ -521,11 +514,11 @@ function RankingsList({
   const { locale, t } = useLocale();
 
   return (
-    <section className="rounded-[28px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
+    <section className="rounded-[24px] border border-[var(--line)] bg-white/92 p-5 shadow-[0_16px_40px_rgba(32,42,56,0.08)]">
       <h3 className="font-[family-name:var(--font-display)] text-xl">{t(title)}</h3>
       <p className="text-sm text-[var(--ink-600)]">
         {t({
-          zh: "聚合结果仅用于政策优先级排序，不暴露事件级原始记录。",
+          zh: "聚合结果只用于政策优先级排序，不暴露事件级原始记录。",
           en: "Aggregate results are only used for policy prioritization and do not expose event-level records.",
         })}
       </p>
@@ -539,17 +532,11 @@ function RankingsList({
               {metricKey === "queue_risk_score" ? item.queue_rank : item.structural_rank}
             </p>
             <div>
-              <p className="font-medium text-[var(--ink-900)]">
-                {displayLockName(item.lock_name, locale)}
-              </p>
-              <p className="text-sm text-[var(--ink-600)]">
-                {displayCorridor(item.corridor, locale)}
-              </p>
+              <p className="font-medium text-[var(--ink-900)]">{displayLockName(item.lock_name, locale)}</p>
+              <p className="text-sm text-[var(--ink-600)]">{displayCorridor(item.corridor, locale)}</p>
             </div>
             <div className="text-right">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--ink-500)]">
-                {t(metricLabel)}
-              </p>
+              <p className="text-xs uppercase tracking-[0.16em] text-[var(--ink-500)]">{t(metricLabel)}</p>
               <p className="text-lg font-semibold">{Number(item[metricKey]).toFixed(3)}</p>
             </div>
           </div>

@@ -18,14 +18,14 @@
     {
       "lock_id": 13,
       "lock_name": "杨林",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "queue_risk_score": 0.5450526676216747,
       "queue_rank": 1
     },
     {
       "lock_id": 14,
       "lock_name": "南通",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "queue_risk_score": 0.4212754269942424,
       "queue_rank": 2
     },

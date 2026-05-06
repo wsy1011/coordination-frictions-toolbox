@@ -7,10 +7,10 @@ export default async function RankingsPage() {
 
   return (
     <AppShell
-      title={{ zh: "治理优先级", en: "Governance Prioritization" }}
+      title={{ zh: "治理优先级", en: "Governance Priorities" }}
       subtitle={{
-        zh: "查看由聚合风险指标生成的治理优先级，并在地图上定位对应船闸。",
-        en: "Review targeting indices generated from aggregate risk indicators and locate the corresponding locks on the map.",
+        zh: "对比直接负担缓解和连通瓶颈监管下的聚合治理优先对象，并在地图上定位对应船闸。",
+        en: "Compare aggregate priority objects for direct burden relief and connected-bottleneck supervision, then locate each lock on the map.",
       }}
     >
       <PolicyWorkbench mode="rankings" initialData={initialData} />

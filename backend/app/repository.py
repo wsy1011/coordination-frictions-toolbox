@@ -13,7 +13,7 @@ from .config import ROOT_DIR, settings
 ENCODINGS = ("utf-8-sig", "utf-8", "gb18030", "gbk")
 
 CORRIDOR_GROUP_MAP = {
-    "沿江口门群": "沿江口门",
+    "沿江口门群": "沿江口门群",
     "京杭主通道": "京杭运河",
     "苏南入江支网": "苏南",
     "通扬—里下河网络": "苏中",

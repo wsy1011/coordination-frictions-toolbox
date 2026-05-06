@@ -1,6 +1,6 @@
-export const SITE_TITLE = "Lock-Side Coordination Frictions Demo";
+export const SITE_TITLE = "Connected Lock Pressure Companion";
 export const SITE_DESCRIPTION =
-  "An interactive bilingual policy sandbox for the paper on lock-side coordination frictions, connected spillovers, and fixed-budget governance designs.";
+  "A bilingual companion demo for connected lock pressure, pre-dispatch governance burden, grouped CO2 consequence evidence, and fixed-capacity governance targeting.";
 
 export const AUTHOR_NAME = "Suyang Wang";
 export const AUTHOR_EMAIL = "wangsuyang@hhu.edu.cn";

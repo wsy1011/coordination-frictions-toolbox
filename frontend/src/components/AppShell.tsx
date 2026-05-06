@@ -9,8 +9,8 @@ import { AUTHOR_EMAIL, AUTHOR_NAME } from "@/lib/site";
 
 const navItems = [
   { href: "/", label: { zh: "政策沙盘", en: "Policy Sandbox" } },
-  { href: "/network", label: { zh: "连通网络", en: "Connected Lock Network" } },
-  { href: "/rankings", label: { zh: "治理优先级", en: "Governance Prioritization" } },
+  { href: "/network", label: { zh: "连通船闸网络", en: "Connected Lock Network" } },
+  { href: "/rankings", label: { zh: "治理优先级", en: "Governance Priorities" } },
   { href: "/about", label: { zh: "方法与边界", en: "Method and Scope" } },
 ];
 
@@ -28,24 +28,24 @@ export function AppShell({
 
   return (
     <div className="min-h-screen bg-[var(--sand-100)] text-[var(--ink-900)]">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(13,82,145,0.10),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(215,114,35,0.16),_transparent_30%)]" />
-      <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[rgba(250,246,239,0.9)] backdrop-blur-xl">
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(135deg,_rgba(13,82,145,0.08),_transparent_42%),linear-gradient(315deg,_rgba(215,114,35,0.10),_transparent_45%)]" />
+      <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[rgba(250,246,239,0.92)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1540px] flex-col gap-4 px-6 py-4 lg:px-10">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-4xl">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.35em] text-[var(--ink-500)]">
-                Lock-Side Coordination Frictions
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[var(--ink-500)]">
+                Connected Lock Pressure Companion
               </p>
-              <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-[0.02em] lg:text-4xl">
+              <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl lg:text-4xl">
                 {t(title)}
               </h1>
-              <p className="mt-2 max-w-3xl text-sm text-[var(--ink-600)] lg:text-base">
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--ink-600)] lg:text-base">
                 {t(subtitle)}
               </p>
               <p className="mt-3 text-sm text-[var(--ink-700)]">
                 {locale === "zh" ? "作者" : "Author"}:{" "}
                 <span className="font-semibold">{AUTHOR_NAME}</span>
-                {" · "}
+                {" / "}
                 <a
                   href="https://github.com/wsy1011"
                   target="_blank"
@@ -54,7 +54,7 @@ export function AppShell({
                 >
                   GitHub: wsy1011
                 </a>
-                {" · "}
+                {" / "}
                 <a
                   href={`mailto:${AUTHOR_EMAIL}`}
                   className="underline decoration-[var(--line)] underline-offset-4 hover:text-[var(--accent-blue)]"
@@ -63,7 +63,7 @@ export function AppShell({
                 </a>
               </p>
             </div>
-            <div className="flex flex-col items-end gap-3">
+            <div className="flex flex-col items-start gap-3 lg:items-end">
               <div className="inline-flex rounded-full border border-[var(--line)] bg-white/80 p-1 shadow-sm">
                 {(["zh", "en"] as const).map((item) => (
                   <button
@@ -81,7 +81,7 @@ export function AppShell({
                   </button>
                 ))}
               </div>
-              <nav className="flex flex-wrap items-center justify-end gap-2">
+              <nav className="flex flex-wrap items-center gap-2 lg:justify-end">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}

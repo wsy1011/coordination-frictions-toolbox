@@ -4,10 +4,10 @@ import { AboutContent } from "@/components/AboutContent";
 export default function AboutPage() {
   return (
     <AppShell
-      title={{ zh: "方法与说明", en: "Methodology" }}
+      title={{ zh: "方法与边界", en: "Method and Scope" }}
       subtitle={{
-        zh: "解释这个论文 Demo 如何与原研究项目隔离、如何读取数据，以及第一版的使用边界。",
-        en: "Explain how this paper demo stays isolated from the research repository, how it reads data, and what the first release is designed to cover.",
+        zh: "说明这个独立网站如何配套论文新结果，以及公开演示和原始研究数据之间的边界。",
+        en: "Explain how this standalone website supports the revised paper results and where the public-demo boundary sits relative to the research data.",
       }}
     >
       <AboutContent />

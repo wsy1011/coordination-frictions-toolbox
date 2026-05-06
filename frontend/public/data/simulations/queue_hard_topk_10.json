@@ -108,7 +108,7 @@
     {
       "lock_id": 13,
       "lock_name": "杨林",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "queue_rank": 1,
       "structural_rank": 2,
       "queue_risk_score": 0.5450526676216747,
@@ -117,7 +117,7 @@
     {
       "lock_id": 14,
       "lock_name": "南通",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "queue_rank": 2,
       "structural_rank": 5,
       "queue_risk_score": 0.4212754269942424,
@@ -153,7 +153,7 @@
     {
       "lock_id": 11,
       "lock_name": "张家港",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "queue_rank": 6,
       "structural_rank": 25,
       "queue_risk_score": 0.1170277568956366,
@@ -171,7 +171,7 @@
     {
       "lock_id": 12,
       "lock_name": "虞山",
-      "corridor": "沿江口门",
+      "corridor": "沿江口门群",
       "queue_rank": 8,
       "structural_rank": 11,
       "queue_risk_score": 0.0933923442133508,

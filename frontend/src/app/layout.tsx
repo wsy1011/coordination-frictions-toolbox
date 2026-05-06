@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   authors: [{ name: AUTHOR_NAME }],
   creator: AUTHOR_NAME,
   keywords: [
-    "lock coordination frictions",
+    "connected lock pressure",
+    "pre-dispatch burden",
+    "inland waterway governance",
     "policy demo",
     "inland waterway",
     "ship lock",

@@ -1,6 +1,6 @@
-# Lock-Side Coordination Frictions Demo
+# Connected Lock Pressure Companion
 
-An interactive bilingual policy sandbox for the paper on lock-side coordination frictions, connected spillovers, and fixed-budget governance designs.
+A bilingual companion website for the revised paper on connected lock pressure, AIS-visible waiting, pre-dispatch governance burden, grouped CO2 consequence evidence, and fixed-capacity governance targeting.
 
 This repository is a standalone demo website. It is intentionally separated from the upstream research repository and only uses aggregate demo snapshots or read-only data adapters. It does not publish event-level lock-passage records.
 
@@ -25,9 +25,10 @@ Suyang Wang
 
 - Shows a connected lock network with observed lock locations on a real map.
 - Provides a bilingual English/Chinese frontend.
-- Compares fixed-budget governance designs in a policy sandbox.
-- Supports queue-policy and structural-reallocation policy objects.
-- Shows targeting indices and lock-level pre-dispatch waiting changes.
+- Presents the paper's current headline evidence: mean and median pre-dispatch burden, corridor-pressure dispatch-hazard contrast, grouped CO2 consequence evidence, and the fixed-capacity benchmark.
+- Compares fixed-capacity governance designs in a policy sandbox.
+- Separates direct burden relief from connected-bottleneck supervision as two governance objects.
+- Shows targeting indices and lock-level pre-dispatch waiting changes from aggregate demo snapshots.
 - Supports static GitHub Pages deployment using exported JSON snapshots.
 
 ## What This Demo Does Not Do
@@ -36,6 +37,7 @@ Suyang Wang
 - It does not provide real-time dispatching or operational scheduling.
 - It does not modify the upstream research project.
 - It does not re-estimate the paper's empirical specification inside the browser.
+- It does not treat grouped CO2 evidence as the paper's main causal claim; it is supporting consequence evidence for the connected-pressure diagnosis.
 
 ## Repository Structure
 
@@ -145,7 +147,7 @@ NEXT_PUBLIC_BASE_PATH=/coordination-frictions-toolbox
 
 ## Data Boundary
 
-The public repository is designed for method communication and interface demonstration. It may contain demo snapshots and aggregate outputs, but it should not contain restricted event-level lock-passage data.
+The public repository is designed for method communication and interface demonstration. It may contain demo snapshots and aggregate outputs, but it should not contain restricted event-level lock-passage data. The current public framing follows the revised manuscript boundary: AIS-visible waiting and pre-dispatch burden are the main governance objects; grouped CO2 results are supporting consequence evidence; fixed-capacity rankings are transparent benchmark comparisons rather than live operational recommendations.
 
 For public deployment, use GitHub Pages static mode and avoid committing private raw data, local logs, or restricted exports.
 

@@ -9,7 +9,7 @@ export default async function NetworkPage() {
     <AppShell
       title={{ zh: "连通船闸网络", en: "Connected Lock Network" }}
       subtitle={{
-        zh: "查看区域-功能分组、观测船闸点位和拓扑约束下的直接连通关系。",
+        zh: "查看区域功能分组、观测船闸点位和拓扑约束下的连通关系。",
         en: "Inspect regional-functional groups, observed lock locations, and topology-constrained connected links.",
       }}
     >

@@ -33,25 +33,16 @@ function buildSrcDoc(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     html, body, #map { height: 100%; margin: 0; }
-    body { font-family: Arial, sans-serif; }
+    body { font-family: "Microsoft YaHei", "Segoe UI", sans-serif; }
     .leaflet-container { background: #e9efe7; }
   </style>
 </head>
 <body>
   <div id="map"></div>
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const payload = ${payload};
     const map = L.map('map', { zoomControl: true }).setView([32.8, 119.5], 6.5);
@@ -71,7 +62,7 @@ function buildSrcDoc(
         {
           color: '#d77223',
           weight: Math.min(Math.max((edge.weight || 0) / 2500, 1.2), 4.5),
-          opacity: 0.3
+          opacity: 0.32
         }
       ).addTo(map);
     });
@@ -84,7 +75,7 @@ function buildSrcDoc(
         color: '#f7f0e3',
         weight: 2,
         fillColor: isSelected ? '#0d5291' : '#16324f',
-        fillOpacity: 0.85
+        fillOpacity: 0.86
       }).addTo(map);
       marker.bindPopup(
         '<strong>' + lock.lock_name + '</strong><br/>' +
@@ -157,11 +148,11 @@ export function MapPanel({
   );
 
   return (
-    <section className="overflow-hidden rounded-[30px] border border-[var(--line)] bg-white/92 shadow-[0_18px_45px_rgba(32,42,56,0.10)]">
-      <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] px-5 py-4">
+    <section className="overflow-hidden rounded-[24px] border border-[var(--line)] bg-white/92 shadow-[0_18px_45px_rgba(32,42,56,0.10)]">
+      <div className="flex flex-col gap-3 border-b border-[var(--line)] px-5 py-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h3 className="font-[family-name:var(--font-display)] text-xl">{t(title)}</h3>
-          <p className="text-sm text-[var(--ink-600)]">{t(subtitle)}</p>
+          <p className="text-sm leading-6 text-[var(--ink-600)]">{t(subtitle)}</p>
         </div>
         <div className="rounded-full border border-[var(--line)] bg-[var(--sand-100)] px-4 py-2 text-sm text-[var(--ink-700)]">
           {locale === "zh" ? "当前聚焦" : "Current Focus"}: {displayLockName(selectedName, locale)}
