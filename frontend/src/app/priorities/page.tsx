@@ -2,7 +2,7 @@ import { AppShell } from "@/components/AppShell";
 import { PolicyWorkbench } from "@/components/PolicyWorkbench";
 import { getInitialDashboardData } from "@/lib/server-api";
 
-export default async function RankingsPage() {
+export default async function PrioritiesPage() {
   const initialData = await getInitialDashboardData();
 
   return (
@@ -13,7 +13,7 @@ export default async function RankingsPage() {
         en: "Compare aggregate priority objects for direct burden relief and connected-bottleneck supervision, then locate each lock on the map.",
       }}
     >
-      <PolicyWorkbench mode="rankings" initialData={initialData} />
+      <PolicyWorkbench mode="priorities" initialData={initialData} />
     </AppShell>
   );
 }

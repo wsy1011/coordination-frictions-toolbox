@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
-DEFAULT_SOURCE_PROJECT_DIR = ROOT_DIR.parent / "coordination frictions"
+DEFAULT_SOURCE_PROJECT_DIR = ROOT_DIR.parent / "inland-shipping-eeoi-corridor-pressure"
 
 
 class Settings(BaseSettings):

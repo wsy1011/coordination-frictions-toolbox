@@ -46,7 +46,7 @@ const boundaries = [
   },
   {
     zh: "固定容量情景是透明 benchmark，用于比较治理规则，不应解释为真实调度系统。",
-    en: "The fixed-capacity scenario is a transparent benchmark for comparing governance rules, not a live dispatching system.",
+    en: "The fixed-capacity benchmark compares governance rules; it is not a live dispatching system.",
   },
   {
     zh: "private 模式也只应以只读方式接入受限数据目录。",
@@ -56,10 +56,10 @@ const boundaries = [
 
 const pages = [
   {
-    name: { zh: "政策沙盘", en: "Policy Sandbox" },
+    name: { zh: "证据仪表盘", en: "Evidence Dashboard" },
     detail: {
-      zh: "比较统一分配、Top-K 和按风险加权等固定容量规则下的负担变化。",
-      en: "Compare burden changes under uniform, Top-K, and risk-weighted fixed-capacity rules.",
+      zh: "汇总当前论文的样本层、调度 hazard、CO2 配套证据和固定容量基准。",
+      en: "Summarize the current paper's sample layers, dispatch-hazard evidence, CO2 support, and fixed-capacity benchmarks.",
     },
   },
   {

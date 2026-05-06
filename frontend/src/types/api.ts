@@ -1,3 +1,5 @@
+import type { LocalizedText } from "@/lib/locale";
+
 export type LockPoint = {
   lock_id: number;
   lock_name: string;
@@ -22,47 +24,6 @@ export type CorridorMeta = {
   total_events: number;
 };
 
-export type HeadlineMetrics = {
-  events: number;
-  transitions: number;
-  threshold: number;
-  expected_wait1: number;
-  expected_wait_total: number;
-  low_eff_share: number;
-  state4_share: number;
-};
-
-export type ScenarioRecord = {
-  scenario: string;
-  expected_wait1: number;
-  expected_wait_total?: number;
-  low_eff_share?: number;
-  state4_share?: number;
-  delta_wait1?: number;
-  delta_wait_total?: number;
-  delta_low_eff_share?: number;
-  delta_state4_share?: number;
-  p90_wait1?: number;
-  delta_p90_wait1?: number;
-  high_wait_prob?: number;
-  delta_high_wait_prob?: number;
-  budget_k?: number;
-};
-
-export type BaselineOverview = {
-  headline: HeadlineMetrics;
-  state_shares: Record<string, number>;
-  top_risks: Array<{
-    lock_id: number;
-    lock_name: string;
-    corridor: string;
-    queue_risk_score: number;
-    queue_rank: number;
-  }>;
-  proxy_stats: Record<string, { mean?: number; p50?: number; p75?: number; p90?: number }>;
-  scenarios: ScenarioRecord[];
-};
-
 export type NetworkEdge = {
   source_id: number;
   target_id: number;
@@ -83,55 +44,112 @@ export type NetworkResponse = {
   edges: NetworkEdge[];
 };
 
-export type RankingRecord = {
-  cur_lock_id: number;
-  lock_name: string;
-  corridor: string;
-  queue_rank: number;
-  structural_rank: number;
-  queue_risk_score: number;
-  structural_risk_score: number;
+export type HeadlineEvidence = {
+  administrative_rows: number;
+  pressure_covariate_rows: number;
+  mean_pre_dispatch_burden_min: number;
+  median_pre_dispatch_burden_min: number;
+  p75_pre_dispatch_burden_min: number;
+  mean_local_queue_pressure: number;
+  mean_corridor_pressure: number;
+  grouped_co2_cells: number;
+  mean_grouped_co2_million_g: number;
+  co2_fe_r2: number;
+  co2_calibrator_r2: number;
 };
 
-export type RankingsResponse = {
-  queue: RankingRecord[];
-  structural: RankingRecord[];
+export type SampleLayer = {
+  layer: string;
+  count: number;
+  unit: string;
+  role: string;
 };
 
-export type SimulationSelection = {
-  policy_family: string;
-  allocation_family: string;
-  budget_k: number;
-  scenario: string;
+export type AisStateRule = {
+  state: string;
+  rule: string;
+  role: string;
 };
 
-export type SimulationImpactLock = {
+export type HazardContrast = {
+  panel: string;
+  contrast: string;
+  change_pct: number;
+  ci: string;
+};
+
+export type Co2Model = {
+  spec: string;
+  pre_dispatch_burden_coef: number;
+  local_queue_pressure_coef: number;
+  corridor_pressure_coef: number;
+  direction_sensitive_pressure_coef: number;
+  groups: number;
+  r2: number;
+};
+
+export type CounterfactualGain = {
+  rule_id: string;
+  rule: string;
+  allocation: "uniform" | "targeted";
+  mean_burden_reduction_min: number;
+  p90_burden_reduction_min: number;
+};
+
+export type PolicyRule = {
+  rule_id: string;
+  rule: string;
+  policy_objective: string;
+  governance_level: string;
+  instrument: string;
+  metric: string;
+};
+
+export type GeographicHeterogeneity = {
+  grouping: string;
+  category: string;
+  event_rows: number;
+  mean_pre_dispatch_burden_min: number;
+  mean_corridor_pressure: number;
+};
+
+export type PriorityTarget = {
+  rank: number;
   lock_id: number;
-  lock_name: string;
-  baseline_wait1_min: number;
-  policy_wait1_min: number;
-  delta_wait1_min: number;
-  priority_rank: number;
+  region: string;
+  gateway: boolean;
+  mean_burden_min: number;
+  p90_burden_min: number;
+  exposure_cp: number;
+  sensitivity: number;
 };
 
-export type SimulationResponse = {
-  selection: SimulationSelection;
-  summary: ScenarioRecord & Record<string, number | string>;
-  impact_locks: SimulationImpactLock[];
-  ranked_locks: Array<{
-    lock_id: number;
-    lock_name: string;
-    corridor: string;
-    queue_rank: number;
-    structural_rank: number;
-    queue_risk_score: number;
-    structural_risk_score: number;
-  }>;
-};
-
-export type ExportResponse = {
+export type FigureAsset = {
+  id: string;
   title: string;
-  content_type: string;
-  content: string;
+  path: string;
+  role: string;
 };
 
+export type PaperEvidence = {
+  headline: HeadlineEvidence;
+  sample_layers: SampleLayer[];
+  ais_state_rules: AisStateRule[];
+  hazard_contrasts: HazardContrast[];
+  co2_models: Co2Model[];
+  counterfactual_gains: CounterfactualGain[];
+  policy_rules: PolicyRule[];
+  geographic_heterogeneity: GeographicHeterogeneity[];
+  priority_targets: PriorityTarget[];
+  figures: FigureAsset[];
+};
+
+export type InitialDashboardData = {
+  corridors: CorridorMeta[];
+  network: NetworkResponse;
+  evidence: PaperEvidence;
+};
+
+export type LocalizedFigure = FigureAsset & {
+  localizedTitle?: LocalizedText;
+};

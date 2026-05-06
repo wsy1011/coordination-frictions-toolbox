@@ -8,9 +8,9 @@ import { type LocalizedText, useLocale } from "@/lib/locale";
 import { AUTHOR_EMAIL, AUTHOR_NAME } from "@/lib/site";
 
 const navItems = [
-  { href: "/", label: { zh: "政策沙盘", en: "Policy Sandbox" } },
+  { href: "/", label: { zh: "证据仪表盘", en: "Evidence Dashboard" } },
   { href: "/network", label: { zh: "连通船闸网络", en: "Connected Lock Network" } },
-  { href: "/rankings", label: { zh: "治理优先级", en: "Governance Priorities" } },
+  { href: "/priorities", label: { zh: "治理优先级", en: "Governance Priorities" } },
   { href: "/about", label: { zh: "方法与边界", en: "Method and Scope" } },
 ];
 

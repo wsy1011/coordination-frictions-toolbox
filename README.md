@@ -26,7 +26,7 @@ Suyang Wang
 - Shows a connected lock network with observed lock locations on a real map.
 - Provides a bilingual English/Chinese frontend.
 - Presents the paper's current headline evidence: mean and median pre-dispatch burden, corridor-pressure dispatch-hazard contrast, grouped CO2 consequence evidence, and the fixed-capacity benchmark.
-- Compares fixed-capacity governance designs in a policy sandbox.
+- Presents fixed-capacity governance comparisons as an evidence dashboard.
 - Separates direct burden relief from connected-bottleneck supervision as two governance objects.
 - Shows targeting indices and lock-level pre-dispatch waiting changes from aggregate demo snapshots.
 - Supports static GitHub Pages deployment using exported JSON snapshots.
@@ -147,7 +147,7 @@ NEXT_PUBLIC_BASE_PATH=/coordination-frictions-toolbox
 
 ## Data Boundary
 
-The public repository is designed for method communication and interface demonstration. It may contain demo snapshots and aggregate outputs, but it should not contain restricted event-level lock-passage data. The current public framing follows the revised manuscript boundary: AIS-visible waiting and pre-dispatch burden are the main governance objects; grouped CO2 results are supporting consequence evidence; fixed-capacity rankings are transparent benchmark comparisons rather than live operational recommendations.
+The public repository is designed for method communication and interface demonstration. It may contain demo snapshots and aggregate outputs, but it should not contain restricted event-level lock-passage data. The current public framing follows the revised manuscript boundary: AIS-visible waiting and pre-dispatch burden are the main governance objects; grouped CO2 results are supporting consequence evidence; fixed-capacity priority comparisons are transparent benchmarks rather than live operational recommendations.
 
 For public deployment, use GitHub Pages static mode and avoid committing private raw data, local logs, or restricted exports.
 

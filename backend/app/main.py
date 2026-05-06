@@ -1,23 +1,16 @@
 from __future__ import annotations
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
 
 from .config import settings
 from .repository import repository
 
 
-class SimulationRequest(BaseModel):
-    policy_family: str = Field(default="queue")
-    allocation_family: str = Field(default="uniform")
-    budget_k: int = Field(default=10)
-
-
 app = FastAPI(
-    title="Coordination Frictions Toolbox API",
-    version="0.1.0",
-    summary="Independent policy toolbox backend for the coordination frictions project.",
+    title="Connected Lock Pressure Companion API",
+    version="0.2.0",
+    summary="Read-only companion backend for connected lock pressure evidence and public aggregate snapshots.",
 )
 
 app.add_middleware(
@@ -49,36 +42,6 @@ def network() -> dict[str, object]:
     return repository.get_network()
 
 
-@app.get("/api/baseline/overview")
-def baseline_overview() -> dict[str, object]:
-    return repository.get_baseline_overview()
-
-
-@app.get("/api/rankings")
-def rankings(limit: int = 20) -> dict[str, object]:
-    return repository.get_rankings(limit=limit)
-
-
-@app.post("/api/simulate")
-def simulate(payload: SimulationRequest) -> dict[str, object]:
-    try:
-        return repository.simulate(
-            policy_family=payload.policy_family,
-            allocation_family=payload.allocation_family,
-            budget_k=payload.budget_k,
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-@app.post("/api/export/report")
-def export_report(payload: SimulationRequest) -> dict[str, object]:
-    try:
-        return repository.export_report(
-            policy_family=payload.policy_family,
-            allocation_family=payload.allocation_family,
-            budget_k=payload.budget_k,
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
+@app.get("/api/paper/evidence")
+def paper_evidence() -> dict[str, object]:
+    return repository.get_paper_evidence()

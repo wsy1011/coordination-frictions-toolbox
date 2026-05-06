@@ -1,20 +1,10 @@
-import type {
-  BaselineOverview,
-  CorridorMeta,
-  ExportResponse,
-  LockPoint,
-  NetworkResponse,
-  RankingsResponse,
-  SimulationResponse,
-} from "@/types/api";
+import type { CorridorMeta, LockPoint, NetworkResponse, PaperEvidence } from "@/types/api";
 import { API_BASE_URL, BASE_PATH, IS_STATIC_MODE } from "@/lib/site";
 
-async function request<T>(pathName: string, init?: RequestInit): Promise<T> {
+async function request<T>(pathName: string): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${pathName}`, {
-    ...init,
     headers: {
       "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
     },
     cache: "no-store",
   });
@@ -34,10 +24,6 @@ async function readStatic<T>(relativePath: string): Promise<T> {
     throw new Error(`Static request failed: ${response.status} ${response.statusText}`);
   }
   return response.json() as Promise<T>;
-}
-
-function simulationFileName(policyFamily: string, allocationFamily: string, budgetK: number): string {
-  return `data/simulations/${policyFamily}_${allocationFamily}_${budgetK}.json`;
 }
 
 export async function fetchLocks(): Promise<LockPoint[]> {
@@ -62,42 +48,8 @@ export async function fetchNetwork(): Promise<NetworkResponse> {
   return IS_STATIC_MODE ? readStatic<NetworkResponse>("data/network.json") : request<NetworkResponse>("/api/network");
 }
 
-export async function fetchBaselineOverview(): Promise<BaselineOverview> {
+export async function fetchPaperEvidence(): Promise<PaperEvidence> {
   return IS_STATIC_MODE
-    ? readStatic<BaselineOverview>("data/baseline-overview.json")
-    : request<BaselineOverview>("/api/baseline/overview");
-}
-
-export async function fetchRankings(): Promise<RankingsResponse> {
-  return IS_STATIC_MODE ? readStatic<RankingsResponse>("data/rankings.json") : request<RankingsResponse>("/api/rankings");
-}
-
-export async function runSimulation(payload: {
-  policy_family: string;
-  allocation_family: string;
-  budget_k: number;
-}): Promise<SimulationResponse> {
-  if (IS_STATIC_MODE) {
-    return readStatic<SimulationResponse>(
-      simulationFileName(payload.policy_family, payload.allocation_family, payload.budget_k),
-    );
-  }
-  return request<SimulationResponse>("/api/simulate", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-
-export async function exportReport(payload: {
-  policy_family: string;
-  allocation_family: string;
-  budget_k: number;
-}): Promise<ExportResponse> {
-  if (IS_STATIC_MODE) {
-    throw new Error("Static demo mode does not support report export.");
-  }
-  return request<ExportResponse>("/api/export/report", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+    ? readStatic<PaperEvidence>("data/paper-evidence.json")
+    : request<PaperEvidence>("/api/paper/evidence");
 }
