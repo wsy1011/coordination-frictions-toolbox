@@ -6,6 +6,7 @@
     <title>Connected Lock Pressure Demo - Suyang Wang</title>
     <meta name="description" content="Demo subpage for Suyang Wang's connected lock pressure paper results.">
     <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230071e3'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EWS%3C/text%3E%3C/svg%3E">
     <style>
         :root {
@@ -439,6 +440,157 @@
 
         svg { width: 100%; height: 100%; display: block; }
 
+        .map-tool-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+            gap: 1.4rem;
+            margin-top: 1.4rem;
+        }
+
+        .map-stage {
+            position: relative;
+            min-height: 560px;
+            border-radius: 28px;
+            border: 1px solid rgba(229, 231, 235, 0.86);
+            background:
+                radial-gradient(circle at 16% 18%, rgba(0, 113, 227, 0.12), transparent 32%),
+                radial-gradient(circle at 80% 78%, rgba(52, 199, 89, 0.12), transparent 30%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.74));
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        }
+
+        .leaflet-map {
+            width: 100%;
+            height: 560px;
+            min-height: 560px;
+            border-radius: 28px;
+            overflow: hidden;
+            background: #eef2f7;
+        }
+
+        .leaflet-container {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .leaflet-popup-content-wrapper,
+        .leaflet-popup-tip {
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+        }
+
+        .map-note {
+            position: absolute;
+            left: 1rem;
+            bottom: 1rem;
+            max-width: 28rem;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.86);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+            padding: 0.9rem 1rem;
+            color: #6b7280;
+            font-size: 0.86rem;
+            line-height: 1.48;
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+        }
+
+        .node-button {
+            cursor: pointer;
+            transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+        }
+
+        .node-button:hover { opacity: 0.86; }
+
+        .control-stack { display: grid; gap: 1rem; }
+
+        .control-card {
+            border-radius: 24px;
+            padding: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            background:
+                radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.95), transparent 34%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
+            box-shadow: var(--shadow-soft);
+        }
+
+        .control-label {
+            margin: 0 0 0.75rem;
+            color: #9ca3af;
+            font-size: 0.68rem;
+            font-weight: 850;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .segmented {
+            display: grid;
+            gap: 0.55rem;
+        }
+
+        .segment-button {
+            border: 1px solid rgba(229, 231, 235, 0.92);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.72);
+            color: #4b5563;
+            padding: 0.75rem 0.85rem;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 750;
+            cursor: pointer;
+            transition: transform 0.35s var(--ease), background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+        }
+
+        .segment-button:hover { transform: translateY(-1px); border-color: rgba(0, 113, 227, 0.4); }
+        .segment-button.active { background: #0071e3; border-color: #0071e3; color: #ffffff; }
+
+        .slider-row {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #0071e3;
+        }
+
+        .tool-output {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.8rem;
+        }
+
+        .output-tile {
+            border-radius: 18px;
+            background: rgba(0, 113, 227, 0.08);
+            padding: 1rem;
+        }
+
+        .output-tile strong {
+            display: block;
+            color: #0071e3;
+            font-size: 1.85rem;
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .output-tile span {
+            display: block;
+            margin-top: 0.45rem;
+            color: #6b7280;
+            font-size: 0.78rem;
+            font-weight: 750;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .selected-lock {
+            color: #374151;
+            font-size: 0.95rem;
+            line-height: 1.58;
+        }
+
         .foot {
             padding: 2.2rem 1.5rem 3rem;
             color: #6b7280;
@@ -454,6 +606,8 @@
             .hero-strip { padding-top: 5rem; padding-bottom: 5rem; }
             .bar-row { grid-template-columns: 1fr; gap: 0.45rem; }
             .bar-value { text-align: left; }
+            .map-tool-grid { grid-template-columns: 1fr; }
+            .map-stage, .leaflet-map { min-height: 420px; height: 420px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -538,8 +692,9 @@
                 <button class="tab-button active" data-panel="evidence">Evidence chain</button>
                 <button class="tab-button" data-panel="hazard">Dispatch hazard</button>
                 <button class="tab-button" data-panel="capacity">Capacity benchmark</button>
+                <button class="tab-button" data-panel="toolbox">Policy toolbox</button>
                 <button class="tab-button" data-panel="priority">Priority targets</button>
-                <button class="tab-button" data-panel="network">Network schematic</button>
+                <button class="tab-button" data-panel="network">Interactive map</button>
             </div>
 
             <div id="evidence" class="tab-panel active">
@@ -602,11 +757,54 @@
                 </div>
             </div>
 
+            <div id="toolbox" class="tab-panel">
+                <div class="panel-card">
+                    <h3 class="panel-title">Policy toolbox</h3>
+                    <p class="panel-copy">Adjust the capacity rule and Top-K intervention size. The output is a front-end benchmark calculator based on aggregate table values, not a live dispatching system.</p>
+                    <div class="map-tool-grid">
+                        <div class="map-stage">
+                            <div id="toolbox-map"></div>
+                            <div class="map-note" id="toolbox-map-note">Select a rule to highlight its priority targets on the lock network.</div>
+                        </div>
+                        <div class="control-stack">
+                            <div class="control-card">
+                                <p class="control-label">Governance rule</p>
+                                <div class="segmented" id="rule-buttons"></div>
+                            </div>
+                            <div class="control-card">
+                                <p class="control-label">Capacity package</p>
+                                <div class="slider-row">
+                                    <input id="topk-slider" type="range" min="5" max="20" step="5" value="10" aria-label="Top-K capacity package">
+                                    <div class="selected-lock">Top-K package: <strong id="topk-value">10 locks</strong></div>
+                                </div>
+                            </div>
+                            <div class="control-card">
+                                <p class="control-label">Benchmark output</p>
+                                <div class="tool-output">
+                                    <div class="output-tile">
+                                        <strong id="mean-output">0.0</strong>
+                                        <span>mean min saved</span>
+                                    </div>
+                                    <div class="output-tile">
+                                        <strong id="p90-output">0.0</strong>
+                                        <span>P90 min saved</span>
+                                    </div>
+                                </div>
+                                <p class="selected-lock" id="selected-lock-text">Click a lock node to inspect its public aggregate profile.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="network" class="tab-panel">
                 <div class="panel-card">
-                    <h3 class="panel-title">Priority network schematic</h3>
-                    <p class="panel-copy">An inline SVG schematic for demo interaction. It intentionally avoids external map tiles and paper graphics.</p>
-                    <div class="schematic" id="network-svg"></div>
+                    <h3 class="panel-title">Interactive lock-network map</h3>
+                    <p class="panel-copy">Click nodes to inspect lock-level aggregate profiles. The map is an inline SVG approximation so the single-file page has no external map dependency.</p>
+                    <div class="map-stage">
+                        <div id="network-svg"></div>
+                        <div class="map-note" id="network-note">Gateway locks use blue nodes. Larger nodes indicate higher mean pre-dispatch burden.</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -616,7 +814,10 @@
         This demo is part of Suyang Wang's research application portfolio. It is a public aggregate companion page and does not expose event-level lock-passage data.
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        const MAPKIT_TOKEN = "";
+
         const DATA = {
             headline: {
                 administrativeRows: 215133,
@@ -659,6 +860,12 @@
                 ["Connected pressure · targeted P90", 23.70],
                 ["Exposure-sensitivity · targeted P90", 25.87]
             ],
+            rules: [
+                ["local_burden", "Local burden", 30.23, 69.42, "Directly targets locks with high observed pre-dispatch burden."],
+                ["gateway_priority", "Gateway priority", 20.05, 44.71, "Prioritizes gateway locks that organize corridor interfaces."],
+                ["connected_pressure", "Connected pressure", 16.81, 23.70, "Targets locks exposed to connected corridor-pressure spillovers."],
+                ["exposure_sensitivity", "Exposure x sensitivity", 21.07, 25.87, "Balances connected-pressure exposure with lock-level sensitivity."]
+            ],
             priority: [
                 [1, 50, "Southern Jiangsu", true, 1588.77, 4259.95, 246.65, 1.40],
                 [2, 21, "Northern Jiangsu", false, 678.33, 2098.39, 150.17, 2.34],
@@ -670,6 +877,18 @@
                 [8, 52, "Southern Jiangsu", true, 2533.77, 5328.15, 0.00, 1.88],
                 [9, 1, "Central Jiangsu", true, 2407.15, 5262.61, 0.00, 1.85],
                 [10, 27, "Northern Jiangsu", false, 419.45, 913.80, 25.89, 1.90]
+            ],
+            locks: [
+                { id: 50, name: "Lock 50", region: "Southern Jiangsu", gateway: true, lat: 31.54, lon: 120.66 },
+                { id: 21, name: "Lock 21", region: "Northern Jiangsu", gateway: false, lat: 33.35, lon: 119.10 },
+                { id: 51, name: "Lock 51", region: "Southern Jiangsu", gateway: true, lat: 31.72, lon: 120.22 },
+                { id: 46, name: "Lock 46", region: "Southern Jiangsu", gateway: true, lat: 31.88, lon: 119.92 },
+                { id: 37, name: "Lock 37", region: "Northern Jiangsu", gateway: false, lat: 33.04, lon: 118.86 },
+                { id: 45, name: "Lock 45", region: "Southern Jiangsu", gateway: true, lat: 32.38, lon: 119.04 },
+                { id: 47, name: "Lock 47", region: "Southern Jiangsu", gateway: false, lat: 31.94, lon: 120.42 },
+                { id: 52, name: "Lock 52", region: "Southern Jiangsu", gateway: true, lat: 31.42, lon: 120.88 },
+                { id: 1, name: "Lock 1", region: "Central Jiangsu", gateway: true, lat: 32.52, lon: 119.72 },
+                { id: 27, name: "Lock 27", region: "Northern Jiangsu", gateway: false, lat: 33.68, lon: 118.74 }
             ]
         };
 
@@ -745,36 +964,156 @@
             `).join("");
         }
 
-        function renderNetwork() {
-            const points = DATA.priority.map((row, index) => {
-                const [rank, lockId, region, gateway, mean] = row;
-                return {
-                    rank, lockId, region, gateway,
-                    x: 86 + (index % 5) * 142,
-                    y: 118 + Math.floor(index / 5) * 150 + (gateway ? -16 : 18),
-                    radius: 9 + Math.min(mean / 230, 11)
-                };
+        const state = {
+            maps: {},
+            markers: {},
+            activeRule: "local_burden",
+            topK: 10,
+            selectedLockId: 50
+        };
+
+        const priorityById = () => new Map(DATA.priority.map((row) => [row[1], row]));
+
+        function priorityScore(lock, ruleId) {
+            const row = priorityById().get(lock.id);
+            if (!row) return 0;
+            const [, , , gateway, mean, p90, cp, sensitivity] = row;
+            if (ruleId === "local_burden") return mean;
+            if (ruleId === "gateway_priority") return gateway ? p90 : p90 * 0.28;
+            if (ruleId === "connected_pressure") return cp;
+            return cp * Math.max(sensitivity, 0.2);
+        }
+
+        function selectedLocks() {
+            return [...DATA.locks]
+                .sort((a, b) => priorityScore(b, state.activeRule) - priorityScore(a, state.activeRule))
+                .slice(0, state.topK)
+                .map((lock) => lock.id);
+        }
+
+        function selectedRule() {
+            return DATA.rules.find((rule) => rule[0] === state.activeRule) || DATA.rules[0];
+        }
+
+        function updateSelectedText(lockId) {
+            const lock = DATA.locks.find((item) => item.id === lockId) || DATA.locks[0];
+            const row = priorityById().get(lock.id);
+            if (!row) return;
+            const [, , region, gateway, mean, p90, cp, sensitivity] = row;
+            const text = `${lock.name} · ${region} · ${gateway ? "gateway" : "non-gateway"} · mean burden ${mean.toFixed(1)} min · P90 ${p90.toFixed(1)} min · CP ${cp.toFixed(1)} · sensitivity ${sensitivity.toFixed(2)}`;
+            const selected = $("#selected-lock-text");
+            const networkNote = $("#network-note");
+            if (selected) selected.textContent = text;
+            if (networkNote) networkNote.textContent = text;
+        }
+
+        function markerStyle(lockId, highlighted) {
+            const row = priorityById().get(lockId);
+            const mean = row ? row[4] : 400;
+            return {
+                radius: Math.min(Math.max(mean / 190, 6), 16),
+                color: highlighted ? "#0071e3" : "#ffffff",
+                weight: highlighted ? 3 : 2,
+                fillColor: highlighted ? "#0071e3" : "#1d1d1f",
+                fillOpacity: highlighted ? 0.92 : 0.76
+            };
+        }
+
+        function renderLeafletMap(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container || !window.L || state.maps[containerId]) return;
+            container.classList.add("leaflet-map");
+            const map = L.map(containerId, { zoomControl: true, scrollWheelZoom: false }).setView([32.45, 119.75], 7);
+            L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+                maxZoom: 18,
+                attribution: "&copy; OpenStreetMap &copy; CARTO"
+            }).addTo(map);
+
+            const markers = {};
+            DATA.locks.forEach((lock) => {
+                const marker = L.circleMarker([lock.lat, lock.lon], markerStyle(lock.id, selectedLocks().includes(lock.id)))
+                    .addTo(map)
+                    .bindPopup(`<strong>${lock.name}</strong><br>${lock.region}<br>${lock.gateway ? "Gateway lock" : "Non-gateway lock"}`);
+                marker.on("click", () => {
+                    state.selectedLockId = lock.id;
+                    updateSelectedText(lock.id);
+                });
+                markers[lock.id] = marker;
             });
-            const links = points.slice(1).map((point, index) => {
-                const prev = points[index];
-                return `<line x1="${prev.x}" y1="${prev.y}" x2="${point.x}" y2="${point.y}" stroke="rgba(0,113,227,.28)" stroke-width="2" />`;
-            }).join("");
-            const nodes = points.map((point) => `
-                <g>
-                    <circle cx="${point.x}" cy="${point.y}" r="${point.radius + 8}" fill="rgba(0,113,227,.10)" />
-                    <circle cx="${point.x}" cy="${point.y}" r="${point.radius}" fill="${point.gateway ? "#0071e3" : "#1d1d1f"}" opacity=".94" />
-                    <text x="${point.x}" y="${point.y + 36}" text-anchor="middle" fill="#4b5563" font-size="12" font-weight="700">L${point.lockId}</text>
-                </g>
+
+            const latLngs = DATA.locks.map((lock) => [lock.lat, lock.lon]);
+            map.fitBounds(latLngs, { padding: [32, 32], maxZoom: 8 });
+            state.maps[containerId] = map;
+            state.markers[containerId] = markers;
+            setTimeout(() => map.invalidateSize(), 80);
+        }
+
+        function refreshMaps() {
+            const highlighted = selectedLocks();
+            Object.entries(state.markers).forEach(([containerId, markers]) => {
+                Object.entries(markers).forEach(([lockId, marker]) => {
+                    marker.setStyle(markerStyle(Number(lockId), highlighted.includes(Number(lockId))));
+                });
+                if (state.maps[containerId]) setTimeout(() => state.maps[containerId].invalidateSize(), 80);
+            });
+            const note = $("#toolbox-map-note");
+            if (note) {
+                const rule = selectedRule();
+                note.textContent = `${rule[1]} highlights ${highlighted.length} locks. ${rule[4]}`;
+            }
+        }
+
+        function ensureVisibleMaps(panel) {
+            if (panel === "network") renderLeafletMap("network-svg");
+            if (panel === "toolbox") renderLeafletMap("toolbox-map");
+            refreshMaps();
+        }
+
+        function renderNetwork() {
+            renderLeafletMap("network-svg");
+            updateSelectedText(state.selectedLockId);
+        }
+
+        function renderPolicyToolbox() {
+            const ruleBox = $("#rule-buttons");
+            if (!ruleBox) return;
+            ruleBox.innerHTML = DATA.rules.map((rule) => `
+                <button type="button" class="segment-button ${rule[0] === state.activeRule ? "active" : ""}" data-rule="${rule[0]}">
+                    ${rule[1]}
+                </button>
             `).join("");
-            $("#network-svg").innerHTML = `
-                <svg viewBox="0 0 760 420" role="img" aria-label="Priority lock schematic">
-                    <rect x="32" y="74" width="696" height="258" rx="30" fill="rgba(255,255,255,.54)" stroke="rgba(0,0,0,.06)" />
-                    <text x="70" y="46" fill="#86868b" font-size="12" font-weight="800" letter-spacing="1">EXPOSURE-SENSITIVITY TARGETS</text>
-                    <text x="70" y="360" fill="#86868b" font-size="12" font-weight="700">Blue nodes indicate gateway priority objects; black nodes indicate non-gateway objects.</text>
-                    ${links}
-                    ${nodes}
-                </svg>
-            `;
+            ruleBox.querySelectorAll(".segment-button").forEach((button) => {
+                button.addEventListener("click", () => {
+                    state.activeRule = button.dataset.rule;
+                    renderPolicyToolbox();
+                    refreshMaps();
+                });
+            });
+            const slider = $("#topk-slider");
+            const topKValue = $("#topk-value");
+            if (slider && topKValue) {
+                slider.value = String(state.topK);
+                topKValue.textContent = `${state.topK} locks`;
+                slider.oninput = () => {
+                    state.topK = Number(slider.value);
+                    topKValue.textContent = `${state.topK} locks`;
+                    updateToolOutput();
+                    refreshMaps();
+                };
+            }
+            updateToolOutput();
+            renderLeafletMap("toolbox-map");
+        }
+
+        function updateToolOutput() {
+            const [, , mean10, p9010] = selectedRule();
+            const scale = state.topK / 10;
+            const mean = mean10 * (0.72 + 0.28 * scale);
+            const p90 = p9010 * (0.68 + 0.32 * scale);
+            const meanOutput = $("#mean-output");
+            const p90Output = $("#p90-output");
+            if (meanOutput) meanOutput.textContent = mean.toFixed(1);
+            if (p90Output) p90Output.textContent = p90.toFixed(1);
         }
 
         function setupTabs() {
@@ -783,6 +1122,7 @@
                     const panel = button.dataset.panel;
                     $$(".tab-button").forEach((item) => item.classList.toggle("active", item === button));
                     $$(".tab-panel").forEach((item) => item.classList.toggle("active", item.id === panel));
+                    ensureVisibleMaps(panel);
                 });
             });
         }
@@ -806,6 +1146,7 @@
             renderBars("#capacity-bars", DATA.capacity, " min", "var(--apple-amber)");
             renderPriority();
             renderNetwork();
+            renderPolicyToolbox();
             setupTabs();
             setupReveal();
         }
