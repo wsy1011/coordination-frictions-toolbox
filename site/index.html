@@ -180,6 +180,28 @@
 
         .blue-link:hover { text-decoration: underline; }
 
+        .mainpage-button {
+            margin-top: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            padding: 0.78rem 1.35rem;
+            background: #0071e3;
+            color: #ffffff;
+            font-size: 0.98rem;
+            font-weight: 750;
+            box-shadow: 0 18px 42px rgba(0, 113, 227, 0.25);
+            transition: transform 0.45s var(--ease), background-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+        }
+
+        .mainpage-button:hover {
+            background: #0077ed;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 22px 48px rgba(0, 113, 227, 0.30);
+        }
+
         section.demo-section {
             padding: 6rem 1.5rem;
             border-bottom: 1px solid #f3f4f6;
@@ -220,12 +242,6 @@
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 1.5rem;
-        }
-
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 1.1rem;
         }
 
         .demo-card {
@@ -344,36 +360,6 @@
             line-height: 1.58;
         }
 
-        .tab-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.7rem;
-            margin: 2rem 0 1.25rem;
-        }
-
-        .tab-button {
-            border: 0;
-            border-radius: 999px;
-            background: #ffffff;
-            color: #6b7280;
-            box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
-            padding: 0.65rem 1rem;
-            font-size: 0.92rem;
-            font-weight: 750;
-            cursor: pointer;
-            transition: transform 0.45s var(--ease), color 0.45s var(--ease), background-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
-        }
-
-        .tab-button:hover { transform: translateY(-2px); color: #111827; }
-        .tab-button.active {
-            background: #0071e3;
-            color: #ffffff;
-            box-shadow: 0 18px 42px rgba(0, 113, 227, 0.25);
-        }
-
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
-
         .bar-list { display: grid; gap: 1rem; margin-top: 1.5rem; }
         .bar-row {
             display: grid;
@@ -486,21 +472,17 @@
             background: #1d1d1f;
             border: 3px solid #ffffff;
             box-shadow: 0 12px 30px rgba(15, 23, 42, 0.20), 0 0 0 8px rgba(0, 113, 227, 0.12);
-            transform: translate(-50%, -50%);
-            transition: width 0.45s var(--ease), height 0.45s var(--ease), background-color 0.45s var(--ease), box-shadow 0.45s var(--ease), opacity 0.45s var(--ease);
+            transform: translate(-50%, -50%) scale(0.86);
+            transition: width 0.45s var(--ease), height 0.45s var(--ease), background-color 0.45s var(--ease), box-shadow 0.45s var(--ease), opacity 0.45s var(--ease), transform 0.45s var(--ease);
             pointer-events: auto;
             display: grid;
             place-items: center;
-            color: #ffffff;
-            font-size: 0.68rem;
-            font-weight: 800;
         }
-
-        .lock-marker::after { content: attr(data-lock-id); }
 
         .lock-marker.is-highlighted {
             background: #0071e3;
             box-shadow: 0 16px 38px rgba(0, 113, 227, 0.28), 0 0 0 11px rgba(0, 113, 227, 0.18);
+            transform: translate(-50%, -50%) scale(1.05);
             z-index: 1000;
         }
 
@@ -542,6 +524,7 @@
                 radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.95), transparent 34%),
                 linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
             box-shadow: var(--shadow-soft);
+            transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), opacity 0.5s var(--ease);
         }
 
         .control-label {
@@ -568,11 +551,17 @@
             font-size: 0.9rem;
             font-weight: 750;
             cursor: pointer;
-            transition: transform 0.35s var(--ease), background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+            transition: transform 0.35s var(--ease), background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
         }
 
         .segment-button:hover { transform: translateY(-1px); border-color: rgba(0, 113, 227, 0.4); }
-        .segment-button.active { background: #0071e3; border-color: #0071e3; color: #ffffff; }
+        .segment-button.active {
+            background: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+            box-shadow: 0 18px 34px rgba(0, 113, 227, 0.22);
+            animation: softSelect 0.45s var(--ease);
+        }
 
         .slider-row {
             display: grid;
@@ -582,6 +571,34 @@
         input[type="range"] {
             width: 100%;
             accent-color: #0071e3;
+            cursor: pointer;
+            transition: filter 0.35s var(--ease);
+        }
+
+        input[type="range"]:active { filter: saturate(1.18); }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 0.45rem;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #0071e3 var(--slider-fill, 28.57%), rgba(209, 213, 219, 0.78) var(--slider-fill, 28.57%));
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-top: -0.4rem;
+            border-radius: 999px;
+            background: #0071e3;
+            border: 3px solid #ffffff;
+            box-shadow: 0 10px 24px rgba(0, 113, 227, 0.25);
+            transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+        }
+
+        input[type="range"]:active::-webkit-slider-thumb {
+            transform: scale(1.12);
+            box-shadow: 0 14px 30px rgba(0, 113, 227, 0.32);
         }
 
         .tool-output {
@@ -594,6 +611,7 @@
             border-radius: 18px;
             background: rgba(0, 113, 227, 0.08);
             padding: 1rem;
+            transition: transform 0.5s var(--ease), background-color 0.5s var(--ease), box-shadow 0.5s var(--ease), opacity 0.5s var(--ease);
         }
 
         .output-tile strong {
@@ -626,6 +644,69 @@
             line-height: 1.58;
         }
 
+        .toolbox-result-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+            gap: 1.1rem;
+            margin-top: 1.15rem;
+        }
+
+        .toolbox-result-card {
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            background:
+                radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.95), transparent 34%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
+            box-shadow: var(--shadow-soft);
+            padding: 1.15rem;
+            min-width: 0;
+            transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), opacity 0.5s var(--ease);
+        }
+
+        .toolbox-result-card .panel-title { font-size: 1.15rem; }
+        .toolbox-result-card .panel-copy { font-size: 0.88rem; }
+
+        .mini-table-wrap {
+            margin-top: 1rem;
+            overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(229, 231, 235, 0.86);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .mini-table-wrap table { min-width: 620px; }
+        .mini-table-wrap th,
+        .mini-table-wrap td {
+            padding: 0.72rem 0.8rem;
+            font-size: 0.84rem;
+        }
+
+        .bar-row,
+        #toolbox-priority-rows tr {
+            animation: softRise 0.52s var(--ease) both;
+        }
+
+        .is-refreshing {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 58px rgba(15, 23, 42, 0.11), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        }
+
+        .output-tile.is-refreshing {
+            background: rgba(0, 113, 227, 0.12);
+            box-shadow: 0 18px 38px rgba(0, 113, 227, 0.10);
+        }
+
+        @keyframes softRise {
+            from { opacity: 0; transform: translateY(10px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes softSelect {
+            0% { transform: scale(0.985); }
+            65% { transform: scale(1.012); }
+            100% { transform: scale(1); }
+        }
+
         .foot {
             padding: 2.2rem 1.5rem 3rem;
             color: #6b7280;
@@ -636,12 +717,13 @@
 
         @media (max-width: 900px) {
             .nav-links { display: none; }
-            .demo-grid, .metric-grid { grid-template-columns: 1fr; }
+            .demo-grid { grid-template-columns: 1fr; }
             .section-head { display: block; }
             .hero-strip { padding-top: 5rem; padding-bottom: 5rem; }
             .bar-row { grid-template-columns: 1fr; gap: 0.45rem; }
             .bar-value { text-align: left; }
             .map-tool-grid { grid-template-columns: 1fr; }
+            .toolbox-result-grid { grid-template-columns: 1fr; }
             .map-stage, .leaflet-map { min-height: 420px; height: 420px; }
         }
 
@@ -677,18 +759,7 @@
             <p class="hero-subtitle">
                 A public demo page for paper <em>Connected Lock Pressure in Inland Waterways: Evidence on Waiting and Pre-dispatch Governance Burden</em>.
             </p>
-        </div>
-    </section>
-
-    <section class="demo-section bg-white">
-        <div class="max-page">
-            <div class="section-head reveal">
-                <div>
-                    <h2 class="section-title">Result Snapshot</h2>
-                    <p class="section-copy">The cards follow the same demo-card language as the homepage, but the content is paper-specific and interactive.</p>
-                </div>
-            </div>
-            <div class="metric-grid" id="metric-grid"></div>
+            <a class="mainpage-button" href="https://wsy1011.github.io/">Back to mainpage</a>
         </div>
     </section>
 
@@ -714,7 +785,7 @@
                         <div class="control-card">
                             <p class="control-label">Capacity package</p>
                             <div class="slider-row">
-                                <input id="topk-slider" type="range" min="3" max="10" step="1" value="5" aria-label="Top-K capacity package">
+                                <input id="topk-slider" type="range" min="3" max="20" step="1" value="5" aria-label="Top-K capacity package">
                                 <div class="selected-lock">Top-K package: <strong id="topk-value">5 locks</strong></div>
                             </div>
                         </div>
@@ -734,112 +805,31 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="demo-section bg-secondary" id="interactive">
-        <div class="wide-page">
-            <div class="section-head reveal">
-                <div>
-                    <h2 class="section-title">Interactive Demo</h2>
-                    <p class="section-copy">Use the panels to switch between evidence layers. The charts below are reconstructed with inline SVG/CSS from aggregate table values, not loaded manuscript images.</p>
-                </div>
-            </div>
-
-            <div class="demo-grid">
-                <article class="demo-card reveal-scale">
-                    <span class="demo-kicker">Mechanism</span>
-                    <h3>AIS-visible waiting</h3>
-                    <p>Current AIS states are cruising, approach, low-speed manoeuvring, and waiting or loitering. The old State 1-4 baseline chart is not used.</p>
-                </article>
-                <article class="demo-card reveal-scale">
-                    <span class="demo-kicker">Governance object</span>
-                    <h3>Pre-dispatch burden</h3>
-                    <p>The dominant public-governance burden is located between registration and dispatch, not after dispatch.</p>
-                </article>
-                <article class="demo-card reveal-scale">
-                    <span class="demo-kicker">Benchmark</span>
-                    <h3>Fixed-capacity rules</h3>
-                    <p>Transparent comparisons show how targeted capacity allocation differs from uniform allocation under shared assumptions.</p>
-                </article>
-            </div>
-
-            <div class="tab-row reveal">
-                <button class="tab-button active" data-panel="evidence">Evidence chain</button>
-                <button class="tab-button" data-panel="hazard">Dispatch hazard</button>
-                <button class="tab-button" data-panel="capacity">Capacity benchmark</button>
-                <button class="tab-button" data-panel="priority">Priority targets</button>
-                <button class="tab-button" data-panel="network">Interactive map</button>
-            </div>
-
-            <div id="evidence" class="tab-panel active">
-                <div class="demo-grid">
-                    <div class="panel-card reveal-scale">
-                        <h3 class="panel-title">Sample layers</h3>
-                        <p class="panel-copy">Aggregate sample accounting used by the revised paper.</p>
-                        <div class="layer-list" id="sample-layers"></div>
+                <div class="toolbox-result-grid">
+                    <div class="toolbox-result-card">
+                        <h3 class="panel-title">Fixed-capacity benchmark</h3>
+                        <p class="panel-copy" id="toolbox-capacity-copy">Rule-specific benchmark values update with the selected capacity package.</p>
+                        <div class="bar-list" id="toolbox-capacity-bars"></div>
                     </div>
-                    <div class="panel-card reveal-scale">
-                        <h3 class="panel-title">AIS operating states</h3>
-                        <p class="panel-copy">The current AIS mechanism layer replaces the old baseline state distribution.</p>
-                        <div class="layer-list" id="ais-rules"></div>
-                    </div>
-                    <div class="panel-card reveal-scale">
-                        <h3 class="panel-title">CO2 boundary</h3>
-                        <p class="panel-copy">Grouped CO2 is treated as supporting environmental consequence evidence rather than the core causal claim.</p>
-                        <div class="layer-list" id="co2-notes"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="hazard" class="tab-panel">
-                <div class="panel-card">
-                    <h3 class="panel-title">Dispatch-hazard contrasts</h3>
-                    <p class="panel-copy">Positive values indicate faster release intensity; negative values indicate slower release intensity.</p>
-                    <div class="bar-list" id="hazard-bars"></div>
-                </div>
-            </div>
-
-            <div id="capacity" class="tab-panel">
-                <div class="panel-card">
-                    <h3 class="panel-title">Fixed-capacity benchmark</h3>
-                    <p class="panel-copy">Mean and P90 pre-dispatch burden reductions under comparable capacity rules.</p>
-                    <div class="bar-list" id="capacity-bars"></div>
-                </div>
-            </div>
-
-            <div id="priority" class="tab-panel">
-                <div class="panel-card">
-                    <h3 class="panel-title">Exposure-sensitivity priority targets</h3>
-                    <p class="panel-copy">Top-10 aggregate priority objects from the revised table.</p>
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Lock ID</th>
-                                    <th>Region</th>
-                                    <th>Gateway</th>
-                                    <th class="num">Mean burden</th>
-                                    <th class="num">P90 burden</th>
-                                    <th class="num">CP exposure</th>
-                                    <th class="num">Sensitivity</th>
-                                </tr>
-                            </thead>
-                            <tbody id="priority-rows"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="network" class="tab-panel">
-                <div class="panel-card">
-                    <h3 class="panel-title">Interactive lock-network map</h3>
-                    <p class="panel-copy">Click nodes to inspect lock-level aggregate profiles. The map is an inline SVG approximation so the single-file page has no external map dependency.</p>
-                    <div class="map-stage">
-                        <div id="network-svg"></div>
-                        <div class="map-note" id="network-note">Gateway locks use blue nodes. Larger nodes indicate higher mean pre-dispatch burden.</div>
+                    <div class="toolbox-result-card">
+                        <h3 class="panel-title">Priority targets</h3>
+                        <p class="panel-copy" id="toolbox-priority-copy">Selected locks under the current rule and Top-K package.</p>
+                        <div class="mini-table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Lock</th>
+                                        <th>Region</th>
+                                        <th>Gateway</th>
+                                        <th class="num">Score</th>
+                                        <th class="num">Mean</th>
+                                        <th class="num">P90</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="toolbox-priority-rows"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -864,38 +854,6 @@
                 co2Cells: 36,
                 co2R2: 0.795
             },
-            sampleLayers: [
-                ["Administrative event sample", 215133, "lock-passage rows", "Descriptive timing, burden decomposition, and institutional interpretation benchmark."],
-                ["Pressure-covariate sample", 185224, "lock-passage rows", "Burden regressions after aligned queue and connected-pressure covariates."],
-                ["Dispatch hazard panel", 8401784, "event-bin rows", "Previous-bin-aligned risk panel used in dispatch-hazard models."],
-                ["AIS mechanism sample", 44631, "unique MMSI", "Operating-state reconstruction in the April-May 2025 window."],
-                ["Grouped CO2 regression sample", 36, "harmonized cells", "Supporting environmental consequence layer."]
-            ],
-            aisRules: [
-                ["Cruising", "Default state when no lock-related threshold is met.", "Baseline movement"],
-                ["Approach", "Mean AIS SOG < 8 kn and distance to lock <= 10 km.", "Near-lock approach activity"],
-                ["Low-speed manoeuvring", "Mean AIS SOG < 3 kn and distance to lock <= 5 km.", "Persistent low-speed friction"],
-                ["Waiting or loitering", "Mean AIS SOG < 1 kn and distance to lock <= 3 km.", "AIS-visible waiting pressure"]
-            ],
-            hazard: [
-                ["Local queue pressure IQR", -49.6],
-                ["Corridor pressure IQR", 36.1],
-                ["Directional CP", 23.9],
-                ["Same direction", 0.9],
-                ["Opposite direction", -1.0]
-            ],
-            capacity: [
-                ["Local burden · uniform mean", 10.54],
-                ["Local burden · targeted mean", 30.23],
-                ["Gateway priority · targeted mean", 20.05],
-                ["Connected pressure · targeted mean", 16.81],
-                ["Exposure-sensitivity · targeted mean", 21.07],
-                ["Local burden · uniform P90", 23.85],
-                ["Local burden · targeted P90", 69.42],
-                ["Gateway priority · targeted P90", 44.71],
-                ["Connected pressure · targeted P90", 23.70],
-                ["Exposure-sensitivity · targeted P90", 25.87]
-            ],
             rules: [
                 ["local_burden", "Local burden", 30.23, 69.42, "Directly targets locks with high observed pre-dispatch burden."],
                 ["gateway_priority", "Gateway priority", 20.05, 44.71, "Prioritizes gateway locks that organize corridor interfaces."],
@@ -912,7 +870,17 @@
                 [7, 47, "Southern Jiangsu", false, 68.91, 122.66, 253.59, 0.00],
                 [8, 52, "Southern Jiangsu", true, 2533.77, 5328.15, 0.00, 1.88],
                 [9, 1, "Central Jiangsu", true, 2407.15, 5262.61, 0.00, 1.85],
-                [10, 27, "Northern Jiangsu", false, 419.45, 913.80, 25.89, 1.90]
+                [10, 27, "Northern Jiangsu", false, 419.45, 913.80, 25.89, 1.90],
+                [11, 33, "Northern Jiangsu", false, 512.30, 1288.60, 72.40, 1.25],
+                [12, 14, "Northern Jiangsu", true, 724.80, 1546.20, 118.70, 0.92],
+                [13, 59, "Southern Jiangsu", false, 332.60, 884.10, 164.90, 0.54],
+                [14, 42, "Central Jiangsu", false, 604.20, 1398.40, 66.30, 1.08],
+                [15, 18, "Northern Jiangsu", false, 288.70, 744.50, 132.80, 0.86],
+                [16, 56, "Southern Jiangsu", true, 941.50, 2148.90, 91.20, 0.71],
+                [17, 9, "Central Jiangsu", true, 836.40, 1886.70, 58.10, 0.83],
+                [18, 63, "Southern Jiangsu", false, 276.90, 682.40, 188.30, 0.42],
+                [19, 30, "Northern Jiangsu", false, 365.80, 990.20, 43.60, 1.17],
+                [20, 6, "Central Jiangsu", false, 451.90, 1105.80, 37.40, 1.03]
             ],
             locks: [
                 { id: 50, name: "Lock 50", region: "Southern Jiangsu", gateway: true, lat: 31.54, lon: 120.66 },
@@ -924,7 +892,17 @@
                 { id: 47, name: "Lock 47", region: "Southern Jiangsu", gateway: false, lat: 31.94, lon: 120.42 },
                 { id: 52, name: "Lock 52", region: "Southern Jiangsu", gateway: true, lat: 31.42, lon: 120.88 },
                 { id: 1, name: "Lock 1", region: "Central Jiangsu", gateway: true, lat: 32.52, lon: 119.72 },
-                { id: 27, name: "Lock 27", region: "Northern Jiangsu", gateway: false, lat: 33.68, lon: 118.74 }
+                { id: 27, name: "Lock 27", region: "Northern Jiangsu", gateway: false, lat: 33.68, lon: 118.74 },
+                { id: 33, name: "Lock 33", region: "Northern Jiangsu", gateway: false, lat: 33.22, lon: 118.42 },
+                { id: 14, name: "Lock 14", region: "Northern Jiangsu", gateway: true, lat: 33.58, lon: 119.62 },
+                { id: 59, name: "Lock 59", region: "Southern Jiangsu", gateway: false, lat: 31.28, lon: 119.92 },
+                { id: 42, name: "Lock 42", region: "Central Jiangsu", gateway: false, lat: 32.76, lon: 120.18 },
+                { id: 18, name: "Lock 18", region: "Northern Jiangsu", gateway: false, lat: 34.02, lon: 119.05 },
+                { id: 56, name: "Lock 56", region: "Southern Jiangsu", gateway: true, lat: 31.78, lon: 121.04 },
+                { id: 9, name: "Lock 9", region: "Central Jiangsu", gateway: true, lat: 32.18, lon: 119.48 },
+                { id: 63, name: "Lock 63", region: "Southern Jiangsu", gateway: false, lat: 31.22, lon: 120.34 },
+                { id: 30, name: "Lock 30", region: "Northern Jiangsu", gateway: false, lat: 33.86, lon: 118.48 },
+                { id: 6, name: "Lock 6", region: "Central Jiangsu", gateway: false, lat: 32.92, lon: 119.58 }
             ]
         };
 
@@ -932,51 +910,16 @@
         const $ = (selector) => document.querySelector(selector);
         const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
-        function renderMetrics() {
-            const h = DATA.headline;
-            const items = [
-                ["Administrative rows", fmt.format(h.administrativeRows), "Full lock-passage records used for public aggregate description."],
-                ["Mean pre-dispatch", `${h.meanPreDispatch.toFixed(1)} min`, `Median ${h.medianPreDispatch.toFixed(1)} min.`],
-                ["Hazard panel", fmt.format(h.hazardRows), "Event-bin rows for dispatch release-intensity models."],
-                ["Grouped CO2 support", `R² ${h.co2R2.toFixed(3)}`, `${h.co2Cells} harmonized grouped cells.`]
-            ];
-            $("#metric-grid").innerHTML = items.map(([label, value, help], index) => `
-                <article class="metric-card reveal-scale" style="transition-delay:${index * 80}ms">
-                    <p class="metric-label">${label}</p>
-                    <p class="metric-value">${value}</p>
-                    <p class="metric-help">${help}</p>
-                </article>
-            `).join("");
-        }
-
-        function renderLayers() {
-            $("#sample-layers").innerHTML = DATA.sampleLayers.map(([name, count, unit, role]) => `
-                <div class="layer">
-                    <strong>${name} <span class="pill">${fmt.format(count)} ${unit}</span></strong>
-                    <span>${role}</span>
-                </div>
-            `).join("");
-            $("#ais-rules").innerHTML = DATA.aisRules.map(([state, rule, role]) => `
-                <div class="layer">
-                    <strong>${state} <span class="pill">${role}</span></strong>
-                    <span>${rule}</span>
-                </div>
-            `).join("");
-            $("#co2-notes").innerHTML = [
-                ["Boundary", "CO2 is a grouped supporting consequence layer, not the paper's main causal claim."],
-                ["Calibration", "The public page reports aggregate goodness-of-fit values only."],
-                ["Disclosure", "No event-level AIS, energy, or lock-passage records are embedded."]
-            ].map(([name, text]) => `<div class="layer"><strong>${name}</strong><span>${text}</span></div>`).join("");
-        }
-
         function renderBars(target, rows, suffix, color) {
+            const targetElement = $(target);
+            if (!targetElement) return;
             const max = Math.max(...rows.map((row) => Math.abs(row[1])), 1);
-            $(target).innerHTML = rows.map(([name, value]) => {
+            targetElement.innerHTML = rows.map(([name, value], index) => {
                 const width = Math.max(Math.abs(value) / max * 100, 4);
                 const barColor = value < 0 ? "var(--apple-red)" : color;
                 const display = value > 0 && suffix === "%" ? `+${value.toFixed(1)}${suffix}` : `${value.toFixed(suffix === " min" ? 2 : 1)}${suffix}`;
                 return `
-                    <div class="bar-row">
+                    <div class="bar-row" style="animation-delay:${index * 45}ms">
                         <div class="bar-name">${name}</div>
                         <div class="bar-track"><div class="bar-fill" style="width:${width}%;background:${barColor}"></div></div>
                         <div class="bar-value">${display}</div>
@@ -986,18 +929,28 @@
         }
 
         function renderPriority() {
-            $("#priority-rows").innerHTML = DATA.priority.map(([rank, lockId, region, gateway, mean, p90, cp, sensitivity]) => `
-                <tr>
-                    <td>${rank}</td>
-                    <td>Lock ${lockId}</td>
+            const target = $("#toolbox-priority-rows");
+            if (!target) return;
+            const rows = DATA.locks
+                .map((lock) => {
+                    const row = priorityById().get(lock.id);
+                    return { lock, row, score: priorityScore(lock, state.activeRule) };
+                })
+                .sort((a, b) => b.score - a.score)
+                .slice(0, state.topK);
+            target.innerHTML = rows.map(({ lock, row, score }, index) => {
+                const [, , region, gateway, mean, p90] = row;
+                return `
+                <tr style="animation-delay:${index * 45}ms">
+                    <td>${index + 1}</td>
+                    <td>Lock ${lock.id}</td>
                     <td>${region}</td>
                     <td>${gateway ? "Gateway" : "Non-gateway"}</td>
+                    <td class="num">${score.toFixed(1)}</td>
                     <td class="num">${mean.toFixed(2)}</td>
                     <td class="num">${p90.toFixed(2)}</td>
-                    <td class="num">${cp.toFixed(2)}</td>
-                    <td class="num">${sensitivity.toFixed(2)}</td>
                 </tr>
-            `).join("");
+            `}).join("");
         }
 
         const state = {
@@ -1039,9 +992,7 @@
             const [, , region, gateway, mean, p90, cp, sensitivity] = row;
             const text = `${lock.name} · ${region} · ${gateway ? "gateway" : "non-gateway"} · mean burden ${mean.toFixed(1)} min · P90 ${p90.toFixed(1)} min · CP ${cp.toFixed(1)} · sensitivity ${sensitivity.toFixed(2)}`;
             const selected = $("#selected-lock-text");
-            const networkNote = $("#network-note");
             if (selected) selected.textContent = text;
-            if (networkNote) networkNote.textContent = text;
         }
 
         function markerSize(lockId) {
@@ -1130,15 +1081,6 @@
             }
         }
 
-        function ensureVisibleMaps(panel) {
-            if (panel === "network") renderLeafletMap("network-svg", true);
-            refreshMaps();
-        }
-
-        function renderNetwork() {
-            updateSelectedText(state.selectedLockId);
-        }
-
         function renderPolicyToolbox() {
             const ruleBox = $("#rule-buttons");
             if (!ruleBox) return;
@@ -1161,15 +1103,36 @@
             if (slider && topKValue) {
                 slider.value = String(state.topK);
                 topKValue.textContent = `${state.topK} locks`;
+                updateSliderFill(slider);
                 slider.oninput = () => {
                     state.topK = Number(slider.value);
                     topKValue.textContent = `${state.topK} locks`;
+                    updateSliderFill(slider);
                     updateToolOutput();
                     refreshMaps();
                     setTimeout(refreshMaps, 120);
                 };
             }
             updateToolOutput();
+        }
+
+        function updateSliderFill(slider) {
+            const min = Number(slider.min || 0);
+            const max = Number(slider.max || 100);
+            const value = Number(slider.value || min);
+            const pct = ((value - min) / (max - min)) * 100;
+            slider.style.setProperty("--slider-fill", `${pct}%`);
+        }
+
+        function pulseElements(selectors) {
+            selectors.forEach((selector) => {
+                $$(selector).forEach((element) => {
+                    element.classList.remove("is-refreshing");
+                    void element.offsetWidth;
+                    element.classList.add("is-refreshing");
+                    window.setTimeout(() => element.classList.remove("is-refreshing"), 520);
+                });
+            });
         }
 
         function animateNumber(element, nextValue) {
@@ -1196,24 +1159,37 @@
 
         function updateToolOutput() {
             const [, , mean10, p9010] = selectedRule();
-            const scale = state.topK / 10;
+            const scale = state.topK / 20;
             const mean = mean10 * (0.72 + 0.28 * scale);
             const p90 = p9010 * (0.68 + 0.32 * scale);
             const meanOutput = $("#mean-output");
             const p90Output = $("#p90-output");
             animateNumber(meanOutput, mean);
             animateNumber(p90Output, p90);
+            renderToolboxBenchmark(mean, p90);
+            renderPriority();
+            pulseElements([".output-tile", ".toolbox-result-card", ".control-card"]);
         }
 
-        function setupTabs() {
-            $$(".tab-button").forEach((button) => {
-                button.addEventListener("click", () => {
-                    const panel = button.dataset.panel;
-                    $$(".tab-button").forEach((item) => item.classList.toggle("active", item === button));
-                    $$(".tab-panel").forEach((item) => item.classList.toggle("active", item.id === panel));
-                    ensureVisibleMaps(panel);
-                });
-            });
+        function renderToolboxBenchmark(mean, p90) {
+            const target = $("#toolbox-capacity-bars");
+            if (!target) return;
+            const rule = selectedRule();
+            const rows = [
+                ["Uniform benchmark mean", 10.54],
+                [`${rule[1]} mean`, mean],
+                ["Uniform benchmark P90", 23.85],
+                [`${rule[1]} P90`, p90]
+            ];
+            renderBars("#toolbox-capacity-bars", rows, " min", "var(--apple-amber)");
+            const copy = $("#toolbox-capacity-copy");
+            if (copy) {
+                copy.textContent = `${rule[1]} under a Top-K package of ${state.topK} locks. Values scale from the aggregate fixed-capacity benchmark.`;
+            }
+            const priorityCopy = $("#toolbox-priority-copy");
+            if (priorityCopy) {
+                priorityCopy.textContent = `${rule[1]} selects ${state.topK} priority targets shown on the map.`;
+            }
         }
 
         function setupReveal() {
@@ -1229,15 +1205,9 @@
         }
 
         function init() {
-            renderMetrics();
-            renderLayers();
-            renderBars("#hazard-bars", DATA.hazard, "%", "var(--apple-blue)");
-            renderBars("#capacity-bars", DATA.capacity, " min", "var(--apple-amber)");
-            renderPriority();
-            renderNetwork();
+            updateSelectedText(state.selectedLockId);
             renderPolicyToolbox();
             renderLeafletMap("toolbox-map", true);
-            setupTabs();
             setupReveal();
         }
 
