@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connected Lock Pressure Demo - Suyang Wang</title>
-    <meta name="description" content="Demo subpage for Suyang Wang's connected lock pressure paper results.">
+    <meta name="description" content="A public demo page for paper Connected Lock Pressure in Inland Waterways: Evidence on Waiting and Pre-dispatch Governance Burden.">
     <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230071e3'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EWS%3C/text%3E%3C/svg%3E">
@@ -489,7 +489,14 @@
             transform: translate(-50%, -50%);
             transition: width 0.45s var(--ease), height 0.45s var(--ease), background-color 0.45s var(--ease), box-shadow 0.45s var(--ease), opacity 0.45s var(--ease);
             pointer-events: auto;
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            font-size: 0.68rem;
+            font-weight: 800;
         }
+
+        .lock-marker::after { content: attr(data-lock-id); }
 
         .lock-marker.is-highlighted {
             background: #0071e3;
@@ -665,15 +672,11 @@
 
     <section class="hero-strip" id="demo">
         <div class="max-hero reveal">
-            <span class="hero-kicker">Demo subpage · Connected lock pressure</span>
+            <span class="hero-kicker">Demo</span>
             <h1 class="hero-title">Interactive evidence for inland lock coordination frictions.</h1>
             <p class="hero-subtitle">
-                A public demo page under Suyang Wang's personal homepage style system. It presents aggregate results from the revised paper without paper-figure images or event-level lock-passage records.
+                A public demo page for paper <em>Connected Lock Pressure in Inland Waterways: Evidence on Waiting and Pre-dispatch Governance Burden</em>.
             </p>
-            <div class="hero-links">
-                <a class="blue-link" href="#interactive">Explore evidence <span aria-hidden="true">›</span></a>
-                <a class="blue-link" href="https://github.com/wsy1011/coordination-frictions-toolbox">GitHub repository <span aria-hidden="true">›</span></a>
-            </div>
         </div>
     </section>
 
@@ -686,6 +689,52 @@
                 </div>
             </div>
             <div class="metric-grid" id="metric-grid"></div>
+        </div>
+    </section>
+
+    <section class="demo-section bg-secondary" id="policy-toolbox">
+        <div class="wide-page">
+            <div class="section-head reveal">
+                <div>
+                    <h2 class="section-title">Policy Toolbox</h2>
+                    <p class="section-copy">Adjust the governance rule and Top-K intervention size. The map highlights the selected aggregate priority targets immediately.</p>
+                </div>
+            </div>
+            <div class="panel-card reveal-scale">
+                <div class="map-tool-grid">
+                    <div class="map-stage">
+                        <div id="toolbox-map"></div>
+                        <div class="map-note" id="toolbox-map-note">Select a rule to highlight its priority targets on the lock network.</div>
+                    </div>
+                    <div class="control-stack">
+                        <div class="control-card">
+                            <p class="control-label">Governance rule</p>
+                            <div class="segmented" id="rule-buttons"></div>
+                        </div>
+                        <div class="control-card">
+                            <p class="control-label">Capacity package</p>
+                            <div class="slider-row">
+                                <input id="topk-slider" type="range" min="3" max="10" step="1" value="5" aria-label="Top-K capacity package">
+                                <div class="selected-lock">Top-K package: <strong id="topk-value">5 locks</strong></div>
+                            </div>
+                        </div>
+                        <div class="control-card">
+                            <p class="control-label">Benchmark output</p>
+                            <div class="tool-output">
+                                <div class="output-tile">
+                                    <strong id="mean-output">0.0</strong>
+                                    <span>mean min saved</span>
+                                </div>
+                                <div class="output-tile">
+                                    <strong id="p90-output">0.0</strong>
+                                    <span>P90 min saved</span>
+                                </div>
+                            </div>
+                            <p class="selected-lock" id="selected-lock-text">Click a lock node to inspect its public aggregate profile.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -720,7 +769,6 @@
                 <button class="tab-button active" data-panel="evidence">Evidence chain</button>
                 <button class="tab-button" data-panel="hazard">Dispatch hazard</button>
                 <button class="tab-button" data-panel="capacity">Capacity benchmark</button>
-                <button class="tab-button" data-panel="toolbox">Policy toolbox</button>
                 <button class="tab-button" data-panel="priority">Priority targets</button>
                 <button class="tab-button" data-panel="network">Interactive map</button>
             </div>
@@ -781,46 +829,6 @@
                             </thead>
                             <tbody id="priority-rows"></tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="toolbox" class="tab-panel">
-                <div class="panel-card">
-                    <h3 class="panel-title">Policy toolbox</h3>
-                    <p class="panel-copy">Adjust the capacity rule and Top-K intervention size. The output is a front-end benchmark calculator based on aggregate table values, not a live dispatching system.</p>
-                    <div class="map-tool-grid">
-                        <div class="map-stage">
-                            <div id="toolbox-map"></div>
-                            <div class="map-note" id="toolbox-map-note">Select a rule to highlight its priority targets on the lock network.</div>
-                        </div>
-                        <div class="control-stack">
-                            <div class="control-card">
-                                <p class="control-label">Governance rule</p>
-                                <div class="segmented" id="rule-buttons"></div>
-                            </div>
-                            <div class="control-card">
-                                <p class="control-label">Capacity package</p>
-                                <div class="slider-row">
-                                    <input id="topk-slider" type="range" min="3" max="10" step="1" value="5" aria-label="Top-K capacity package">
-                                    <div class="selected-lock">Top-K package: <strong id="topk-value">5 locks</strong></div>
-                                </div>
-                            </div>
-                            <div class="control-card">
-                                <p class="control-label">Benchmark output</p>
-                                <div class="tool-output">
-                                    <div class="output-tile">
-                                        <strong id="mean-output">0.0</strong>
-                                        <span>mean min saved</span>
-                                    </div>
-                                    <div class="output-tile">
-                                        <strong id="p90-output">0.0</strong>
-                                        <span>P90 min saved</span>
-                                    </div>
-                                </div>
-                                <p class="selected-lock" id="selected-lock-text">Click a lock node to inspect its public aggregate profile.</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1047,7 +1055,7 @@
             const className = `lock-marker ${highlighted ? "is-highlighted" : "is-muted"}`;
             return L.divIcon({
                 className: "",
-                html: `<div class="${className}" style="--size:${size}px"></div>`,
+                html: `<div class="${className}" data-lock-id="${lockId}" style="--size:${size}px"></div>`,
                 iconSize: [size, size],
                 iconAnchor: [size / 2, size / 2],
                 popupAnchor: [0, -size / 2]
@@ -1105,6 +1113,7 @@
         }
 
         function refreshMaps() {
+            renderLeafletMap("toolbox-map", true);
             const highlighted = selectedLocks();
             Object.entries(state.markers).forEach(([containerId, markers]) => {
                 Object.entries(markers).forEach(([lockId, marker]) => {
@@ -1123,7 +1132,6 @@
 
         function ensureVisibleMaps(panel) {
             if (panel === "network") renderLeafletMap("network-svg", true);
-            if (panel === "toolbox") renderLeafletMap("toolbox-map", true);
             refreshMaps();
         }
 
@@ -1143,6 +1151,7 @@
                 button.addEventListener("click", () => {
                     state.activeRule = button.dataset.rule;
                     renderPolicyToolbox();
+                    renderLeafletMap("toolbox-map", true);
                     refreshMaps();
                     setTimeout(refreshMaps, 120);
                 });
@@ -1227,6 +1236,7 @@
             renderPriority();
             renderNetwork();
             renderPolicyToolbox();
+            renderLeafletMap("toolbox-map", true);
             setupTabs();
             setupReveal();
         }
