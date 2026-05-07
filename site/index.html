@@ -967,6 +967,7 @@
         const state = {
             maps: {},
             markers: {},
+            bounds: {},
             activeRule: "local_burden",
             topK: 10,
             selectedLockId: 50
@@ -1019,9 +1020,25 @@
             };
         }
 
-        function renderLeafletMap(containerId) {
+        function fitMap(containerId) {
+            const map = state.maps[containerId];
+            const bounds = state.bounds[containerId];
+            if (!map || !bounds) return;
+            setTimeout(() => {
+                map.invalidateSize();
+                map.fitBounds(bounds, { padding: [42, 42], maxZoom: 8 });
+                Object.values(state.markers[containerId] || {}).forEach((marker) => marker.bringToFront());
+            }, 120);
+        }
+
+        function renderLeafletMap(containerId, force = false) {
             const container = document.getElementById(containerId);
-            if (!container || !window.L || state.maps[containerId]) return;
+            if (!container || !window.L) return;
+            if (!force && container.offsetParent === null) return;
+            if (state.maps[containerId]) {
+                fitMap(containerId);
+                return;
+            }
             container.classList.add("leaflet-map");
             const map = L.map(containerId, { zoomControl: true, scrollWheelZoom: false }).setView([32.45, 119.75], 7);
             L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
@@ -1042,10 +1059,10 @@
             });
 
             const latLngs = DATA.locks.map((lock) => [lock.lat, lock.lon]);
-            map.fitBounds(latLngs, { padding: [32, 32], maxZoom: 8 });
             state.maps[containerId] = map;
             state.markers[containerId] = markers;
-            setTimeout(() => map.invalidateSize(), 80);
+            state.bounds[containerId] = latLngs;
+            fitMap(containerId);
         }
 
         function refreshMaps() {
@@ -1054,7 +1071,7 @@
                 Object.entries(markers).forEach(([lockId, marker]) => {
                     marker.setStyle(markerStyle(Number(lockId), highlighted.includes(Number(lockId))));
                 });
-                if (state.maps[containerId]) setTimeout(() => state.maps[containerId].invalidateSize(), 80);
+                fitMap(containerId);
             });
             const note = $("#toolbox-map-note");
             if (note) {
@@ -1064,13 +1081,12 @@
         }
 
         function ensureVisibleMaps(panel) {
-            if (panel === "network") renderLeafletMap("network-svg");
-            if (panel === "toolbox") renderLeafletMap("toolbox-map");
+            if (panel === "network") renderLeafletMap("network-svg", true);
+            if (panel === "toolbox") renderLeafletMap("toolbox-map", true);
             refreshMaps();
         }
 
         function renderNetwork() {
-            renderLeafletMap("network-svg");
             updateSelectedText(state.selectedLockId);
         }
 
@@ -1102,7 +1118,6 @@
                 };
             }
             updateToolOutput();
-            renderLeafletMap("toolbox-map");
         }
 
         function updateToolOutput() {
