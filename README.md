@@ -1,8 +1,8 @@
 # Connected Lock Pressure Companion
 
-A single-file companion website for the revised paper on connected lock pressure, AIS-visible waiting, pre-dispatch governance burden, grouped CO2 consequence evidence, and fixed-capacity governance targeting.
+A single-file demo subpage for Suyang Wang's personal homepage, presenting the revised paper results on connected lock pressure, AIS-visible waiting, pre-dispatch governance burden, grouped CO2 consequence evidence, and fixed-capacity governance targeting.
 
-This repository is a standalone demo website. It is intentionally separated from the upstream research repository and only uses aggregate demo snapshots or read-only data adapters. It does not publish event-level lock-passage records.
+This repository is intentionally separated from both the upstream research repository and the personal-homepage repository. It follows the visual frame of `D:\Code\personal-homepage`, but that repository is not modified here. The public page only uses aggregate demo values and does not publish event-level lock-passage records.
 
 ## Live Demo
 
@@ -24,7 +24,7 @@ Suyang Wang
 ## What This Demo Does
 
 - Uses one self-contained HTML file: `site/index.html`.
-- Shows an Apple-style evidence dashboard with inline CSS, inline data, and inline JavaScript.
+- Uses the same top navigation frame and visual language as the personal homepage: `WSY` logo, glass navigation, `demo-card`, `apple-card`, and reveal transitions.
 - Presents the paper's current headline evidence: mean and median pre-dispatch burden, corridor-pressure dispatch-hazard contrast, grouped CO2 consequence evidence, and the fixed-capacity benchmark.
 - Presents fixed-capacity governance comparisons as an evidence dashboard.
 - Separates direct burden relief from connected-bottleneck supervision as two governance objects.

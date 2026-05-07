@@ -1,661 +1,816 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Connected Lock Pressure Companion</title>
-  <meta name="description" content="Single-file companion dashboard for connected lock pressure, pre-dispatch burden, and fixed-capacity governance benchmarks." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230071e3'/%3E%3Cpath d='M16 38c8-18 24-18 32 0' fill='none' stroke='white' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='22' cy='26' r='4' fill='white'/%3E%3Ccircle cx='42' cy='26' r='4' fill='white'/%3E%3C/svg%3E" />
-  <style>
-    :root {
-      --bg: #f5f5f7;
-      --paper: rgba(255, 255, 255, 0.86);
-      --paper-solid: #ffffff;
-      --text: #1d1d1f;
-      --muted: #6e6e73;
-      --faint: #86868b;
-      --line: rgba(0, 0, 0, 0.08);
-      --blue: #0071e3;
-      --blue-soft: #eaf3ff;
-      --green: #34c759;
-      --orange: #ff9f0a;
-      --purple: #5e5ce6;
-      --red: #ff3b30;
-      --shadow: 0 18px 50px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.84);
-      --shadow-strong: 0 28px 70px rgba(15, 23, 42, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.94);
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connected Lock Pressure Demo - Suyang Wang</title>
+    <meta name="description" content="Demo subpage for Suyang Wang's connected lock pressure paper results.">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230071e3'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='24' font-weight='700' fill='white'%3EWS%3C/text%3E%3C/svg%3E">
+    <style>
+        :root {
+            --apple-bg: #ffffff;
+            --apple-secondary-bg: #f5f5f7;
+            --apple-text: #1d1d1f;
+            --apple-gray: #86868b;
+            --apple-blue: #0071e3;
+            --apple-blue-hover: #0077ed;
+            --apple-green: #34c759;
+            --apple-amber: #ff9f0a;
+            --apple-red: #ff3b30;
+            --line: rgba(0, 0, 0, 0.08);
+            --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            --shadow-lift: 0 30px 78px rgba(15, 23, 42, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.96);
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-    * { box-sizing: border-box; }
+        * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-      background:
-        radial-gradient(circle at 18% 8%, rgba(0, 113, 227, 0.08), transparent 30%),
-        radial-gradient(circle at 86% 18%, rgba(52, 199, 89, 0.08), transparent 28%),
-        linear-gradient(180deg, #ffffff 0%, #fbfbfd 45%, var(--bg) 100%);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background:
+                radial-gradient(circle at 18% 8%, rgba(0, 113, 227, 0.08), transparent 30%),
+                radial-gradient(circle at 86% 18%, rgba(52, 199, 89, 0.08), transparent 28%),
+                linear-gradient(180deg, #ffffff 0%, #fbfbfd 46%, #f5f5f7 100%);
+            color: var(--apple-text);
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            padding: 0;
+            overflow-x: clip;
+        }
 
-    button, a { font: inherit; }
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; }
 
-    a { color: var(--blue); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+        .nav-glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
 
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-    }
+        #navbar a {
+            transition: color 0.45s var(--ease), transform 0.45s var(--ease), background-color 0.45s var(--ease);
+        }
 
-    .nav-inner {
-      max-width: 1180px;
-      height: 54px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
+        #navbar a:hover { transform: translateY(-1px); }
 
-    .brand {
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      text-decoration: none;
-    }
+        .ibm-logo-style {
+            font-family: 'Arvo', Georgia, serif;
+            display: inline-block;
+            background-image: repeating-linear-gradient(
+                to bottom,
+                #1d1d1f 0%,
+                #1d1d1f 75%,
+                transparent 75%,
+                transparent 100%
+            );
+            background-size: 100% 0.12em;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+        .nav-border { border-bottom: 1px solid rgba(229, 231, 235, 0.7); }
+        .nav-inner {
+            max-width: 72rem;
+            height: 54px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
 
-    .nav-links::-webkit-scrollbar { display: none; }
+        .nav-logo { font-size: 1.25rem; letter-spacing: -0.04em; z-index: 20; }
+        .nav-links { display: flex; gap: 2rem; color: #6b7280; }
+        .nav-links a:hover { color: #111827; }
+        .contact-pill {
+            background: #0071e3;
+            color: white;
+            padding: 0.375rem 1rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 20;
+        }
+        .contact-pill:hover { background: #0077ed; text-decoration: none; }
 
-    .nav-link {
-      white-space: nowrap;
-      border: 0;
-      border-radius: 999px;
-      padding: 7px 12px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 650;
-      cursor: pointer;
-      transition: color .35s var(--ease), background .35s var(--ease), transform .35s var(--ease);
-    }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s var(--ease), transform 1.2s var(--ease);
+            will-change: opacity, transform;
+        }
 
-    .nav-link:hover { color: var(--blue); transform: translateY(-1px); }
-    .nav-link.active { background: var(--blue); color: #fff; }
+        .reveal-scale {
+            opacity: 0;
+            transform: translateY(30px) scale(0.96);
+            transition: opacity 1.2s var(--ease), transform 1.2s var(--ease);
+            will-change: opacity, transform;
+        }
 
-    main {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 54px 20px 72px;
-    }
+        .reveal.is-visible { opacity: 1; transform: translateY(0); }
+        .reveal-scale.is-visible { opacity: 1; transform: translateY(0) scale(1); }
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
-      gap: 32px;
-      align-items: end;
-      padding: 18px 0 34px;
-    }
+        .hero-strip {
+            background: linear-gradient(180deg, #ffffff 0%, #ffffff 42%, #f5f5f7 100%);
+            padding: 7rem 1.5rem 7.5rem;
+            text-align: center;
+            border-bottom: 1px solid #f3f4f6;
+        }
 
-    .eyebrow {
-      margin: 0 0 12px;
-      color: var(--faint);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-    }
+        .max-hero { max-width: 64rem; margin: 0 auto; }
 
-    h1 {
-      margin: 0;
-      max-width: 850px;
-      font-size: clamp(42px, 6vw, 72px);
-      line-height: 1.04;
-      font-weight: 750;
-      letter-spacing: -0.035em;
-    }
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 999px;
+            padding: 0.42rem 0.8rem;
+            background: rgba(0, 113, 227, 0.1);
+            color: #0071e3;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1.4rem;
+        }
 
-    .lead {
-      margin: 18px 0 0;
-      max-width: 760px;
-      color: var(--muted);
-      font-size: clamp(17px, 2.2vw, 22px);
-      line-height: 1.45;
-      letter-spacing: -0.01em;
-    }
+        .hero-title {
+            margin: 0 auto;
+            max-width: 58rem;
+            font-size: clamp(2.6rem, 6vw, 5.4rem);
+            line-height: 1.04;
+            letter-spacing: -0.035em;
+            font-weight: 760;
+        }
 
-    .hero-card, .card {
-      border: 1px solid rgba(255, 255, 255, 0.78);
-      border-radius: 28px;
-      background: var(--paper);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(22px) saturate(160%);
-      -webkit-backdrop-filter: blur(22px) saturate(160%);
-    }
+        .hero-subtitle {
+            margin: 1.45rem auto 0;
+            max-width: 48rem;
+            color: #6b7280;
+            font-size: clamp(1.08rem, 2.1vw, 1.45rem);
+            line-height: 1.48;
+            letter-spacing: -0.015em;
+        }
 
-    .hero-card {
-      padding: 24px;
-      min-height: 250px;
-    }
+        .hero-links {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
 
-    .hero-kicker {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 750;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
+        .blue-link {
+            color: #0071e3;
+            font-weight: 650;
+            font-size: 1.02rem;
+        }
 
-    .hero-number {
-      margin: 18px 0 4px;
-      font-size: 56px;
-      line-height: 1;
-      font-weight: 760;
-      letter-spacing: -0.045em;
-    }
+        .blue-link:hover { text-decoration: underline; }
 
-    .hero-note {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
-    }
+        section.demo-section {
+            padding: 6rem 1.5rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
 
-    .grid {
-      display: grid;
-      gap: 18px;
-    }
+        .bg-white { background: #ffffff; }
+        .bg-secondary { background: #f5f5f7; }
+        .max-page { max-width: 72rem; margin: 0 auto; }
+        .wide-page { max-width: 87.5rem; margin: 0 auto; }
 
-    .metrics {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin: 12px 0 22px;
-    }
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 2rem;
+            margin-bottom: 2.6rem;
+        }
 
-    .metric {
-      padding: 20px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.78);
-      background: var(--paper);
-      box-shadow: var(--shadow);
-    }
+        .section-title {
+            margin: 0;
+            color: #111827;
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            line-height: 1.08;
+            font-weight: 800;
+            letter-spacing: -0.035em;
+        }
 
-    .metric-label {
-      margin: 0;
-      color: var(--faint);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
+        .section-copy {
+            margin: 0.9rem 0 0;
+            color: #6b7280;
+            max-width: 42rem;
+            font-size: 1.06rem;
+            line-height: 1.65;
+            font-weight: 500;
+        }
 
-    .metric-value {
-      margin: 12px 0 0;
-      font-size: 36px;
-      line-height: 1;
-      font-weight: 760;
-      letter-spacing: -0.035em;
-    }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
 
-    .metric-help {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1.1rem;
+        }
 
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 26px 0 18px;
-    }
+        .demo-card {
+            min-height: 260px;
+            padding: 1.75rem;
+            border-radius: 28px;
+            background:
+                radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.96), transparent 34%),
+                linear-gradient(135deg, rgba(240, 249, 255, 0.98), rgba(237, 242, 255, 0.84));
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: 0 18px 52px rgba(15, 23, 42, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+            transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease), filter 0.55s var(--ease);
+            position: relative;
+            overflow: hidden;
+        }
 
-    .tab {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .68);
-      color: #3d4754;
-      padding: 10px 15px;
-      font-weight: 720;
-      cursor: pointer;
-      transition: background .35s var(--ease), color .35s var(--ease), transform .35s var(--ease), box-shadow .35s var(--ease);
-    }
+        .demo-card:hover {
+            transform: translateY(-8px) scale(1.018);
+            filter: saturate(1.04);
+            box-shadow: var(--shadow-lift);
+        }
 
-    .tab:hover { transform: translateY(-1px); background: #fff; }
-    .tab.active { border-color: var(--blue); background: var(--blue); color: #fff; box-shadow: 0 12px 30px rgba(0, 113, 227, .22); }
+        .demo-kicker {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 0.35rem 0.75rem;
+            background: rgba(0, 113, 227, 0.1);
+            color: #0071e3;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
 
-    .panel { display: none; }
-    .panel.active { display: block; animation: appear .45s var(--ease); }
+        .demo-card h3 {
+            margin: 1.2rem 0 0;
+            font-size: 1.62rem;
+            line-height: 1.12;
+            letter-spacing: -0.03em;
+        }
 
-    @keyframes appear {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        .demo-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            font-size: 0.98rem;
+            margin: 0.9rem 0 0;
+        }
 
-    .two-col { grid-template-columns: minmax(0, 1fr) minmax(320px, .72fr); }
-    .three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .metric-card {
+            min-height: 180px;
+            border-radius: 24px;
+            padding: 1.35rem;
+            background:
+                radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.95), transparent 34%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: var(--shadow-soft);
+        }
 
-    .card { padding: 22px; }
+        .metric-label {
+            margin: 0;
+            color: #9ca3af;
+            font-size: 0.68rem;
+            font-weight: 850;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
 
-    .section-title {
-      margin: 0;
-      font-size: 28px;
-      line-height: 1.12;
-      font-weight: 740;
-      letter-spacing: -0.025em;
-    }
+        .metric-value {
+            margin: 0.8rem 0 0;
+            color: #111827;
+            font-size: 2.35rem;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
 
-    .section-subtitle {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
-    }
+        .metric-help {
+            margin: 0.75rem 0 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
 
-    .bar-list { margin-top: 22px; display: grid; gap: 16px; }
+        .apple-card {
+            background: rgba(255, 255, 255, 0.86);
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.76);
+        }
 
-    .bar-row {
-      display: grid;
-      grid-template-columns: 168px minmax(140px, 1fr) 76px;
-      gap: 12px;
-      align-items: center;
-    }
+        .panel-card {
+            padding: 1.55rem;
+            background:
+                radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.95), transparent 34%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: var(--shadow-soft);
+        }
 
-    .bar-label { color: #3d4754; font-size: 14px; font-weight: 650; }
-    .bar-track { height: 10px; border-radius: 999px; background: #e8e8ed; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 999px; background: var(--blue); min-width: 4px; transition: width .7s var(--ease); }
-    .bar-value { text-align: right; font-size: 14px; color: var(--muted); font-weight: 700; }
+        .panel-title {
+            margin: 0;
+            color: #111827;
+            font-size: 1.5rem;
+            line-height: 1.18;
+            letter-spacing: -0.025em;
+        }
 
-    .layer-list { margin-top: 20px; display: grid; gap: 12px; }
-    .layer {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, .62);
-      padding: 15px;
-    }
-    .layer strong { display: block; font-size: 15px; }
-    .layer span { display: block; margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+        .panel-copy {
+            margin: 0.55rem 0 0;
+            color: #6b7280;
+            font-size: 0.98rem;
+            line-height: 1.58;
+        }
 
-    .table-wrap {
-      margin-top: 18px;
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255, 255, 255, .62);
-    }
+        .tab-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin: 2rem 0 1.25rem;
+        }
 
-    table { width: 100%; border-collapse: collapse; min-width: 720px; }
-    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); text-align: left; font-size: 14px; }
-    th { color: var(--faint); font-size: 11px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
-    tr:last-child td { border-bottom: 0; }
-    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+        .tab-button {
+            border: 0;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #6b7280;
+            box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+            padding: 0.65rem 1rem;
+            font-size: 0.92rem;
+            font-weight: 750;
+            cursor: pointer;
+            transition: transform 0.45s var(--ease), color 0.45s var(--ease), background-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+        }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 999px;
-      background: var(--blue-soft);
-      color: var(--blue);
-      padding: 5px 10px;
-      font-size: 12px;
-      font-weight: 800;
-    }
+        .tab-button:hover { transform: translateY(-2px); color: #111827; }
+        .tab-button.active {
+            background: #0071e3;
+            color: #ffffff;
+            box-shadow: 0 18px 42px rgba(0, 113, 227, 0.25);
+        }
 
-    .svg-box {
-      margin-top: 18px;
-      height: 430px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background:
-        linear-gradient(rgba(255,255,255,.72), rgba(255,255,255,.72)),
-        radial-gradient(circle at 15% 20%, rgba(0,113,227,.08), transparent 34%),
-        radial-gradient(circle at 82% 70%, rgba(52,199,89,.09), transparent 32%);
-      overflow: hidden;
-    }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
 
-    svg { display: block; width: 100%; height: 100%; }
-    .node { cursor: pointer; transition: transform .3s var(--ease); }
-    .node:hover { transform: scale(1.08); }
+        .bar-list { display: grid; gap: 1rem; margin-top: 1.5rem; }
+        .bar-row {
+            display: grid;
+            grid-template-columns: minmax(10rem, 14rem) minmax(8rem, 1fr) 5.5rem;
+            align-items: center;
+            gap: 0.9rem;
+        }
 
-    .footer {
-      margin-top: 44px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
+        .bar-name { color: #374151; font-size: 0.92rem; font-weight: 700; }
+        .bar-track { height: 0.72rem; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 999px; background: #0071e3; min-width: 4px; transition: width 0.8s var(--ease); }
+        .bar-value { color: #6b7280; text-align: right; font-size: 0.88rem; font-weight: 750; font-variant-numeric: tabular-nums; }
 
-    @media (max-width: 900px) {
-      .hero, .two-col, .metrics, .three-col { grid-template-columns: 1fr; }
-      main { padding-top: 34px; }
-      .nav-inner { justify-content: flex-start; }
-      .brand { flex: 0 0 auto; }
-      .bar-row { grid-template-columns: 1fr; gap: 7px; }
-      .bar-value { text-align: left; }
-    }
-  </style>
+        .layer-list { display: grid; gap: 0.85rem; margin-top: 1.5rem; }
+        .layer {
+            border-radius: 18px;
+            border: 1px solid rgba(229, 231, 235, 0.86);
+            background: rgba(255, 255, 255, 0.72);
+            padding: 1rem;
+        }
+
+        .layer strong { display: block; color: #111827; font-size: 1rem; }
+        .layer span { display: block; color: #6b7280; margin-top: 0.35rem; font-size: 0.9rem; line-height: 1.5; }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 0.28rem 0.65rem;
+            background: #eaf3ff;
+            color: #0071e3;
+            font-size: 0.72rem;
+            font-weight: 850;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .table-wrap {
+            margin-top: 1.4rem;
+            overflow-x: auto;
+            border-radius: 22px;
+            border: 1px solid rgba(229, 231, 235, 0.86);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 760px; }
+        th, td { padding: 0.9rem 1rem; border-bottom: 1px solid rgba(229, 231, 235, 0.86); text-align: left; }
+        th { color: #9ca3af; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+        td { color: #374151; font-size: 0.92rem; }
+        td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+        tr:last-child td { border-bottom: 0; }
+
+        .schematic {
+            margin-top: 1.4rem;
+            height: 420px;
+            border-radius: 24px;
+            border: 1px solid rgba(229, 231, 235, 0.86);
+            background:
+                radial-gradient(circle at 16% 16%, rgba(0, 113, 227, 0.09), transparent 30%),
+                radial-gradient(circle at 78% 74%, rgba(52, 199, 89, 0.10), transparent 28%),
+                rgba(255, 255, 255, 0.72);
+            overflow: hidden;
+        }
+
+        svg { width: 100%; height: 100%; display: block; }
+
+        .foot {
+            padding: 2.2rem 1.5rem 3rem;
+            color: #6b7280;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .demo-grid, .metric-grid { grid-template-columns: 1fr; }
+            .section-head { display: block; }
+            .hero-strip { padding-top: 5rem; padding-bottom: 5rem; }
+            .bar-row { grid-template-columns: 1fr; gap: 0.45rem; }
+            .bar-value { text-align: left; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
-  <nav class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="#top">WSY · Lock Pressure</a>
-      <div class="nav-links" aria-label="Dashboard sections">
-        <button class="nav-link active" data-target="evidence">Evidence</button>
-        <button class="nav-link" data-target="hazard">Hazard</button>
-        <button class="nav-link" data-target="capacity">Capacity</button>
-        <button class="nav-link" data-target="priority">Priority</button>
-        <button class="nav-link" data-target="network">Network</button>
-      </div>
-    </div>
-  </nav>
+    <nav id="navbar" class="nav-glass nav-border">
+        <div class="nav-inner">
+            <a href="https://wsy1011.github.io/" class="ibm-logo-style nav-logo">WSY</a>
+            <div class="nav-links">
+                <a href="https://wsy1011.github.io/#about">About</a>
+                <a href="https://wsy1011.github.io/#publications">Publications</a>
+                <a href="https://wsy1011.github.io/#demos">Demos</a>
+                <a href="https://wsy1011.github.io/#photography">Photography</a>
+                <a href="https://wsy1011.github.io/#awards">Awards</a>
+            </div>
+            <a href="mailto:wangsuyang@hhu.edu.cn" class="contact-pill">Contact</a>
+        </div>
+    </nav>
 
-  <main id="top">
-    <section class="hero">
-      <div>
-        <p class="eyebrow">Single-file public companion</p>
-        <h1>Connected Lock Pressure</h1>
-        <p class="lead">
-          An Apple-style, single-HTML dashboard for the revised inland lock-pressure paper. It keeps the public view to aggregate evidence, interactive charts, and benchmark comparisons. No paper figures or event-level records are embedded.
-        </p>
-      </div>
-      <div class="hero-card">
-        <div class="hero-kicker">Public boundary</div>
-        <div class="hero-number">1 file</div>
-        <p class="hero-note">
-          All page structure, styling, data, and interaction logic live in this HTML file. The deployed site has one entry point and no separate route code.
-        </p>
-      </div>
+    <section class="hero-strip" id="demo">
+        <div class="max-hero reveal">
+            <span class="hero-kicker">Demo subpage · Connected lock pressure</span>
+            <h1 class="hero-title">Interactive evidence for inland lock coordination frictions.</h1>
+            <p class="hero-subtitle">
+                A public demo page under Suyang Wang's personal homepage style system. It presents aggregate results from the revised paper without paper-figure images or event-level lock-passage records.
+            </p>
+            <div class="hero-links">
+                <a class="blue-link" href="#interactive">Explore evidence <span aria-hidden="true">›</span></a>
+                <a class="blue-link" href="https://github.com/wsy1011/coordination-frictions-toolbox">GitHub repository <span aria-hidden="true">›</span></a>
+            </div>
+        </div>
     </section>
 
-    <section class="grid metrics" id="metric-grid"></section>
-
-    <div class="tabs" role="tablist">
-      <button class="tab active" data-target="evidence">Evidence chain</button>
-      <button class="tab" data-target="hazard">Dispatch hazard</button>
-      <button class="tab" data-target="capacity">Fixed-capacity benchmark</button>
-      <button class="tab" data-target="priority">Priority targets</button>
-      <button class="tab" data-target="network">Network schematic</button>
-    </div>
-
-    <section id="evidence" class="panel active">
-      <div class="grid two-col">
-        <div class="card">
-          <h2 class="section-title">Paper evidence chain</h2>
-          <p class="section-subtitle">Current manuscript口径: AIS-visible waiting and pre-dispatch burden are the governance objects; grouped CO2 remains supporting consequence evidence.</p>
-          <div class="layer-list" id="sample-layers"></div>
+    <section class="demo-section bg-white">
+        <div class="max-page">
+            <div class="section-head reveal">
+                <div>
+                    <h2 class="section-title">Result Snapshot</h2>
+                    <p class="section-copy">The cards follow the same demo-card language as the homepage, but the content is paper-specific and interactive.</p>
+                </div>
+            </div>
+            <div class="metric-grid" id="metric-grid"></div>
         </div>
-        <div class="card">
-          <h2 class="section-title">AIS operating states</h2>
-          <p class="section-subtitle">These are the current AIS rules. The old State 1-4 baseline distribution has been removed.</p>
-          <div class="layer-list" id="ais-rules"></div>
-        </div>
-      </div>
     </section>
 
-    <section id="hazard" class="panel">
-      <div class="grid two-col">
-        <div class="card">
-          <h2 class="section-title">Dispatch-hazard contrasts</h2>
-          <p class="section-subtitle">Positive values indicate faster release intensity; negative values indicate slower release intensity.</p>
-          <div class="bar-list" id="hazard-bars"></div>
+    <section class="demo-section bg-secondary" id="interactive">
+        <div class="wide-page">
+            <div class="section-head reveal">
+                <div>
+                    <h2 class="section-title">Interactive Demo</h2>
+                    <p class="section-copy">Use the panels to switch between evidence layers. The charts below are reconstructed with inline SVG/CSS from aggregate table values, not loaded manuscript images.</p>
+                </div>
+            </div>
+
+            <div class="demo-grid">
+                <article class="demo-card reveal-scale">
+                    <span class="demo-kicker">Mechanism</span>
+                    <h3>AIS-visible waiting</h3>
+                    <p>Current AIS states are cruising, approach, low-speed manoeuvring, and waiting or loitering. The old State 1-4 baseline chart is not used.</p>
+                </article>
+                <article class="demo-card reveal-scale">
+                    <span class="demo-kicker">Governance object</span>
+                    <h3>Pre-dispatch burden</h3>
+                    <p>The dominant public-governance burden is located between registration and dispatch, not after dispatch.</p>
+                </article>
+                <article class="demo-card reveal-scale">
+                    <span class="demo-kicker">Benchmark</span>
+                    <h3>Fixed-capacity rules</h3>
+                    <p>Transparent comparisons show how targeted capacity allocation differs from uniform allocation under shared assumptions.</p>
+                </article>
+            </div>
+
+            <div class="tab-row reveal">
+                <button class="tab-button active" data-panel="evidence">Evidence chain</button>
+                <button class="tab-button" data-panel="hazard">Dispatch hazard</button>
+                <button class="tab-button" data-panel="capacity">Capacity benchmark</button>
+                <button class="tab-button" data-panel="priority">Priority targets</button>
+                <button class="tab-button" data-panel="network">Network schematic</button>
+            </div>
+
+            <div id="evidence" class="tab-panel active">
+                <div class="demo-grid">
+                    <div class="panel-card reveal-scale">
+                        <h3 class="panel-title">Sample layers</h3>
+                        <p class="panel-copy">Aggregate sample accounting used by the revised paper.</p>
+                        <div class="layer-list" id="sample-layers"></div>
+                    </div>
+                    <div class="panel-card reveal-scale">
+                        <h3 class="panel-title">AIS operating states</h3>
+                        <p class="panel-copy">The current AIS mechanism layer replaces the old baseline state distribution.</p>
+                        <div class="layer-list" id="ais-rules"></div>
+                    </div>
+                    <div class="panel-card reveal-scale">
+                        <h3 class="panel-title">CO2 boundary</h3>
+                        <p class="panel-copy">Grouped CO2 is treated as supporting environmental consequence evidence rather than the core causal claim.</p>
+                        <div class="layer-list" id="co2-notes"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="hazard" class="tab-panel">
+                <div class="panel-card">
+                    <h3 class="panel-title">Dispatch-hazard contrasts</h3>
+                    <p class="panel-copy">Positive values indicate faster release intensity; negative values indicate slower release intensity.</p>
+                    <div class="bar-list" id="hazard-bars"></div>
+                </div>
+            </div>
+
+            <div id="capacity" class="tab-panel">
+                <div class="panel-card">
+                    <h3 class="panel-title">Fixed-capacity benchmark</h3>
+                    <p class="panel-copy">Mean and P90 pre-dispatch burden reductions under comparable capacity rules.</p>
+                    <div class="bar-list" id="capacity-bars"></div>
+                </div>
+            </div>
+
+            <div id="priority" class="tab-panel">
+                <div class="panel-card">
+                    <h3 class="panel-title">Exposure-sensitivity priority targets</h3>
+                    <p class="panel-copy">Top-10 aggregate priority objects from the revised table.</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Lock ID</th>
+                                    <th>Region</th>
+                                    <th>Gateway</th>
+                                    <th class="num">Mean burden</th>
+                                    <th class="num">P90 burden</th>
+                                    <th class="num">CP exposure</th>
+                                    <th class="num">Sensitivity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="priority-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="network" class="tab-panel">
+                <div class="panel-card">
+                    <h3 class="panel-title">Priority network schematic</h3>
+                    <p class="panel-copy">An inline SVG schematic for demo interaction. It intentionally avoids external map tiles and paper graphics.</p>
+                    <div class="schematic" id="network-svg"></div>
+                </div>
+            </div>
         </div>
-        <div class="card">
-          <h2 class="section-title">Grouped CO2 support</h2>
-          <p class="section-subtitle">CO2 estimates are shown as a supporting environmental layer, not as the core governance mechanism.</p>
-          <div class="bar-list" id="co2-bars"></div>
-        </div>
-      </div>
     </section>
 
-    <section id="capacity" class="panel">
-      <div class="card">
-        <h2 class="section-title">Fixed-capacity benchmark</h2>
-        <p class="section-subtitle">Interactive bars are reconstructed from table values rather than displayed as manuscript images.</p>
-        <div class="bar-list" id="capacity-bars"></div>
-      </div>
-    </section>
-
-    <section id="priority" class="panel">
-      <div class="card">
-        <h2 class="section-title">Exposure-sensitivity priority targets</h2>
-        <p class="section-subtitle">Top-10 priority objects from the revised paper table, displayed without paper插图.</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Lock ID</th>
-                <th>Region</th>
-                <th>Gateway</th>
-                <th class="num">Mean burden</th>
-                <th class="num">P90 burden</th>
-                <th class="num">CP exposure</th>
-                <th class="num">Sensitivity</th>
-              </tr>
-            </thead>
-            <tbody id="priority-rows"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="network" class="panel">
-      <div class="grid two-col">
-        <div class="card">
-          <h2 class="section-title">Regional-functional schematic</h2>
-          <p class="section-subtitle">A compact schematic of corridor groups and priority locks. It is drawn with inline SVG and does not load map tiles or image assets.</p>
-          <div class="svg-box" id="network-svg"></div>
-        </div>
-        <div class="card">
-          <h2 class="section-title">Geographic heterogeneity</h2>
-          <p class="section-subtitle">Mean pre-dispatch burden by regional and gateway grouping.</p>
-          <div class="bar-list" id="geo-bars"></div>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">
-      Author: Suyang Wang / Hohai University / <a href="https://github.com/wsy1011">GitHub</a>.
-      This page is a public aggregate companion only. Restricted event-level lock-passage data are not included.
+    <footer class="foot">
+        This demo is part of Suyang Wang's research application portfolio. It is a public aggregate companion page and does not expose event-level lock-passage data.
     </footer>
-  </main>
 
-  <script>
-    const DATA = {
-      headline: {
-        administrativeRows: 215133,
-        pressureRows: 185224,
-        meanPreDispatch: 547.89,
-        medianPreDispatch: 264.72,
-        p75PreDispatch: 643.95,
-        meanLq: 92.67,
-        meanCp: 82.72,
-        groupedCo2Cells: 36,
-        meanGroupedCo2: 403.94,
-        co2FeR2: 0.795,
-        co2CalibratorR2: 0.722
-      },
-      sampleLayers: [
-        ["Administrative event sample", 215133, "lock-passage rows", "Timing, burden decomposition, and institutional interpretation benchmark."],
-        ["Pressure-covariate event sample", 185224, "lock-passage rows", "Burden regressions after queue and connected-pressure alignment."],
-        ["Dispatch hazard panel", 8401784, "event-bin rows", "Previous-bin-aligned risk panel for dispatch-hazard models."],
-        ["AIS mechanism sample", 44631, "unique MMSI", "Operating-state reconstruction in the 28-day April-May 2025 window."],
-        ["AIS emissions with usable parameters", 33674, "unique MMSI", "Inland-adapted STEAM application sample."],
-        ["Grouped CO2 regression sample", 36, "harmonized cells", "Main grouped CO2 regressions in the paper."]
-      ],
-      aisRules: [
-        ["Cruising", "Default state when no lock-related threshold is met.", "Baseline movement"],
-        ["Approach", "Mean AIS SOG < 8 kn and distance to lock <= 10 km.", "Near-lock approach activity"],
-        ["Low-speed manoeuvring", "Mean AIS SOG < 3 kn and distance to lock <= 5 km.", "Persistent low-speed friction"],
-        ["Waiting or loitering", "Mean AIS SOG < 1 kn and distance to lock <= 3 km.", "AIS-visible waiting pressure"]
-      ],
-      hazard: [
-        ["Local queue pressure IQR", -49.6],
-        ["Corridor pressure IQR", 36.1],
-        ["Directional CP", 23.9],
-        ["Same direction", 0.9],
-        ["Opposite direction", -1.0]
-      ],
-      co2: [
-        ["Fixed-effects R2", 0.795],
-        ["Calibrator R2", 0.722],
-        ["Grouped cells / 100", 0.36],
-        ["Mean CO2 / 1000 million g", 0.404]
-      ],
-      gains: [
-        ["Local burden", "Uniform", 10.54, 23.85],
-        ["Local burden", "Targeted", 30.23, 69.42],
-        ["Gateway priority", "Targeted", 20.05, 44.71],
-        ["Connected pressure", "Targeted", 16.81, 23.70],
-        ["Exposure-sensitivity", "Targeted", 21.07, 25.87]
-      ],
-      geo: [
-        ["Southern Jiangsu", 574.8],
-        ["Central Jiangsu", 435.1],
-        ["Northern Jiangsu", 587.4],
-        ["Grand Canal", 611.9],
-        ["Non-Grand Canal", 485.7],
-        ["Gateway locks", 624.5],
-        ["Non-gateway locks", 516.2]
-      ],
-      priority: [
-        [1, 33, "Northern Jiangsu", true, 892.4, 2410.7, 188.2, 0.84],
-        [2, 45, "Grand Canal", false, 847.9, 2201.5, 174.3, 0.78],
-        [3, 10, "Gateway locks", true, 811.6, 2134.2, 169.9, 0.75],
-        [4, 27, "Central Jiangsu", false, 779.2, 2018.4, 158.7, 0.71],
-        [5, 51, "Northern Jiangsu", false, 741.3, 1904.1, 151.5, 0.69],
-        [6, 18, "Southern Jiangsu", true, 728.6, 1856.8, 144.1, 0.66],
-        [7, 39, "Grand Canal", false, 704.9, 1792.6, 139.7, 0.63],
-        [8, 24, "Central Jiangsu", false, 682.5, 1718.3, 132.2, 0.61],
-        [9, 9, "Southern Jiangsu", false, 664.8, 1662.9, 127.6, 0.58],
-        [10, 48, "Northern Jiangsu", true, 641.7, 1597.4, 121.4, 0.55]
-      ]
-    };
+    <script>
+        const DATA = {
+            headline: {
+                administrativeRows: 215133,
+                pressureRows: 185224,
+                hazardRows: 8401784,
+                meanPreDispatch: 547.89,
+                medianPreDispatch: 264.72,
+                co2Cells: 36,
+                co2R2: 0.795
+            },
+            sampleLayers: [
+                ["Administrative event sample", 215133, "lock-passage rows", "Descriptive timing, burden decomposition, and institutional interpretation benchmark."],
+                ["Pressure-covariate sample", 185224, "lock-passage rows", "Burden regressions after aligned queue and connected-pressure covariates."],
+                ["Dispatch hazard panel", 8401784, "event-bin rows", "Previous-bin-aligned risk panel used in dispatch-hazard models."],
+                ["AIS mechanism sample", 44631, "unique MMSI", "Operating-state reconstruction in the April-May 2025 window."],
+                ["Grouped CO2 regression sample", 36, "harmonized cells", "Supporting environmental consequence layer."]
+            ],
+            aisRules: [
+                ["Cruising", "Default state when no lock-related threshold is met.", "Baseline movement"],
+                ["Approach", "Mean AIS SOG < 8 kn and distance to lock <= 10 km.", "Near-lock approach activity"],
+                ["Low-speed manoeuvring", "Mean AIS SOG < 3 kn and distance to lock <= 5 km.", "Persistent low-speed friction"],
+                ["Waiting or loitering", "Mean AIS SOG < 1 kn and distance to lock <= 3 km.", "AIS-visible waiting pressure"]
+            ],
+            hazard: [
+                ["Local queue pressure IQR", -49.6],
+                ["Corridor pressure IQR", 36.1],
+                ["Directional CP", 23.9],
+                ["Same direction", 0.9],
+                ["Opposite direction", -1.0]
+            ],
+            capacity: [
+                ["Local burden · uniform mean", 10.54],
+                ["Local burden · targeted mean", 30.23],
+                ["Gateway priority · targeted mean", 20.05],
+                ["Connected pressure · targeted mean", 16.81],
+                ["Exposure-sensitivity · targeted mean", 21.07],
+                ["Local burden · uniform P90", 23.85],
+                ["Local burden · targeted P90", 69.42],
+                ["Gateway priority · targeted P90", 44.71],
+                ["Connected pressure · targeted P90", 23.70],
+                ["Exposure-sensitivity · targeted P90", 25.87]
+            ],
+            priority: [
+                [1, 50, "Southern Jiangsu", true, 1588.77, 4259.95, 246.65, 1.40],
+                [2, 21, "Northern Jiangsu", false, 678.33, 2098.39, 150.17, 2.34],
+                [3, 51, "Southern Jiangsu", true, 136.08, 429.94, 259.63, 0.00],
+                [4, 46, "Southern Jiangsu", true, 137.89, 215.98, 250.39, 0.00],
+                [5, 37, "Northern Jiangsu", false, 419.12, 846.07, 85.63, 1.96],
+                [6, 45, "Southern Jiangsu", true, 1426.94, 2876.37, 113.31, 0.78],
+                [7, 47, "Southern Jiangsu", false, 68.91, 122.66, 253.59, 0.00],
+                [8, 52, "Southern Jiangsu", true, 2533.77, 5328.15, 0.00, 1.88],
+                [9, 1, "Central Jiangsu", true, 2407.15, 5262.61, 0.00, 1.85],
+                [10, 27, "Northern Jiangsu", false, 419.45, 913.80, 25.89, 1.90]
+            ]
+        };
 
-    const $ = (selector) => document.querySelector(selector);
-    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
-    const fmt = new Intl.NumberFormat("en-US");
+        const fmt = new Intl.NumberFormat("en-US");
+        const $ = (selector) => document.querySelector(selector);
+        const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
-    function metric(label, value, help) {
-      return `<article class="metric"><p class="metric-label">${label}</p><p class="metric-value">${value}</p><p class="metric-help">${help}</p></article>`;
-    }
+        function renderMetrics() {
+            const h = DATA.headline;
+            const items = [
+                ["Administrative rows", fmt.format(h.administrativeRows), "Full lock-passage records used for public aggregate description."],
+                ["Mean pre-dispatch", `${h.meanPreDispatch.toFixed(1)} min`, `Median ${h.medianPreDispatch.toFixed(1)} min.`],
+                ["Hazard panel", fmt.format(h.hazardRows), "Event-bin rows for dispatch release-intensity models."],
+                ["Grouped CO2 support", `R² ${h.co2R2.toFixed(3)}`, `${h.co2Cells} harmonized grouped cells.`]
+            ];
+            $("#metric-grid").innerHTML = items.map(([label, value, help], index) => `
+                <article class="metric-card reveal-scale" style="transition-delay:${index * 80}ms">
+                    <p class="metric-label">${label}</p>
+                    <p class="metric-value">${value}</p>
+                    <p class="metric-help">${help}</p>
+                </article>
+            `).join("");
+        }
 
-    function renderMetrics() {
-      const h = DATA.headline;
-      $("#metric-grid").innerHTML = [
-        metric("Administrative rows", fmt.format(h.administrativeRows), "Full lock-passage sample used for descriptive timing."),
-        metric("Mean burden", `${h.meanPreDispatch.toFixed(1)} min`, `Median ${h.medianPreDispatch.toFixed(1)} min; P75 ${h.p75PreDispatch.toFixed(1)} min.`),
-        metric("CP hazard shift", "+36.1%", "IQR increase in corridor pressure raises release intensity."),
-        metric("Grouped CO2 support", `R² ${h.co2FeR2.toFixed(3)}`, `${h.groupedCo2Cells} harmonized grouped cells.`)
-      ].join("");
-    }
+        function renderLayers() {
+            $("#sample-layers").innerHTML = DATA.sampleLayers.map(([name, count, unit, role]) => `
+                <div class="layer">
+                    <strong>${name} <span class="pill">${fmt.format(count)} ${unit}</span></strong>
+                    <span>${role}</span>
+                </div>
+            `).join("");
+            $("#ais-rules").innerHTML = DATA.aisRules.map(([state, rule, role]) => `
+                <div class="layer">
+                    <strong>${state} <span class="pill">${role}</span></strong>
+                    <span>${rule}</span>
+                </div>
+            `).join("");
+            $("#co2-notes").innerHTML = [
+                ["Boundary", "CO2 is a grouped supporting consequence layer, not the paper's main causal claim."],
+                ["Calibration", "The public page reports aggregate goodness-of-fit values only."],
+                ["Disclosure", "No event-level AIS, energy, or lock-passage records are embedded."]
+            ].map(([name, text]) => `<div class="layer"><strong>${name}</strong><span>${text}</span></div>`).join("");
+        }
 
-    function renderLayers() {
-      $("#sample-layers").innerHTML = DATA.sampleLayers.map(([name, count, unit, role]) =>
-        `<div class="layer"><strong>${name} <span class="pill">${fmt.format(count)} ${unit}</span></strong><span>${role}</span></div>`
-      ).join("");
-      $("#ais-rules").innerHTML = DATA.aisRules.map(([state, rule, role]) =>
-        `<div class="layer"><strong>${state} <span class="pill">${role}</span></strong><span>${rule}</span></div>`
-      ).join("");
-    }
+        function renderBars(target, rows, suffix, color) {
+            const max = Math.max(...rows.map((row) => Math.abs(row[1])), 1);
+            $(target).innerHTML = rows.map(([name, value]) => {
+                const width = Math.max(Math.abs(value) / max * 100, 4);
+                const barColor = value < 0 ? "var(--apple-red)" : color;
+                const display = value > 0 && suffix === "%" ? `+${value.toFixed(1)}${suffix}` : `${value.toFixed(suffix === " min" ? 2 : 1)}${suffix}`;
+                return `
+                    <div class="bar-row">
+                        <div class="bar-name">${name}</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:${width}%;background:${barColor}"></div></div>
+                        <div class="bar-value">${display}</div>
+                    </div>
+                `;
+            }).join("");
+        }
 
-    function renderBars(target, rows, options = {}) {
-      const max = Math.max(...rows.map((row) => Math.abs(row[1])), 1);
-      $(target).innerHTML = rows.map(([label, value]) => {
-        const width = Math.max(Math.abs(value) / max * 100, 4);
-        const color = value < 0 ? "var(--red)" : (options.color || "var(--blue)");
-        const signed = options.signed && value > 0 ? `+${value.toFixed(1)}` : value.toFixed(options.decimals ?? 1);
-        return `<div class="bar-row"><div class="bar-label">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${width}%;background:${color}"></div></div><div class="bar-value">${signed}${options.suffix || ""}</div></div>`;
-      }).join("");
-    }
+        function renderPriority() {
+            $("#priority-rows").innerHTML = DATA.priority.map(([rank, lockId, region, gateway, mean, p90, cp, sensitivity]) => `
+                <tr>
+                    <td>${rank}</td>
+                    <td>Lock ${lockId}</td>
+                    <td>${region}</td>
+                    <td>${gateway ? "Gateway" : "Non-gateway"}</td>
+                    <td class="num">${mean.toFixed(2)}</td>
+                    <td class="num">${p90.toFixed(2)}</td>
+                    <td class="num">${cp.toFixed(2)}</td>
+                    <td class="num">${sensitivity.toFixed(2)}</td>
+                </tr>
+            `).join("");
+        }
 
-    function renderCapacity() {
-      const rows = DATA.gains.map(([rule, allocation, mean, p90]) => [`${rule} · ${allocation} mean`, mean]);
-      const p90Rows = DATA.gains.map(([rule, allocation, mean, p90]) => [`${rule} · ${allocation} P90`, p90]);
-      renderBars("#capacity-bars", rows.concat(p90Rows), { color: "var(--orange)", suffix: " min", decimals: 2 });
-    }
+        function renderNetwork() {
+            const points = DATA.priority.map((row, index) => {
+                const [rank, lockId, region, gateway, mean] = row;
+                return {
+                    rank, lockId, region, gateway,
+                    x: 86 + (index % 5) * 142,
+                    y: 118 + Math.floor(index / 5) * 150 + (gateway ? -16 : 18),
+                    radius: 9 + Math.min(mean / 230, 11)
+                };
+            });
+            const links = points.slice(1).map((point, index) => {
+                const prev = points[index];
+                return `<line x1="${prev.x}" y1="${prev.y}" x2="${point.x}" y2="${point.y}" stroke="rgba(0,113,227,.28)" stroke-width="2" />`;
+            }).join("");
+            const nodes = points.map((point) => `
+                <g>
+                    <circle cx="${point.x}" cy="${point.y}" r="${point.radius + 8}" fill="rgba(0,113,227,.10)" />
+                    <circle cx="${point.x}" cy="${point.y}" r="${point.radius}" fill="${point.gateway ? "#0071e3" : "#1d1d1f"}" opacity=".94" />
+                    <text x="${point.x}" y="${point.y + 36}" text-anchor="middle" fill="#4b5563" font-size="12" font-weight="700">L${point.lockId}</text>
+                </g>
+            `).join("");
+            $("#network-svg").innerHTML = `
+                <svg viewBox="0 0 760 420" role="img" aria-label="Priority lock schematic">
+                    <rect x="32" y="74" width="696" height="258" rx="30" fill="rgba(255,255,255,.54)" stroke="rgba(0,0,0,.06)" />
+                    <text x="70" y="46" fill="#86868b" font-size="12" font-weight="800" letter-spacing="1">EXPOSURE-SENSITIVITY TARGETS</text>
+                    <text x="70" y="360" fill="#86868b" font-size="12" font-weight="700">Blue nodes indicate gateway priority objects; black nodes indicate non-gateway objects.</text>
+                    ${links}
+                    ${nodes}
+                </svg>
+            `;
+        }
 
-    function renderPriority() {
-      $("#priority-rows").innerHTML = DATA.priority.map(([rank, lockId, region, gateway, mean, p90, cp, sens]) =>
-        `<tr><td>${rank}</td><td>Lock ${lockId}</td><td>${region}</td><td>${gateway ? "Gateway" : "Non-gateway"}</td><td class="num">${mean.toFixed(1)}</td><td class="num">${p90.toFixed(1)}</td><td class="num">${cp.toFixed(1)}</td><td class="num">${sens.toFixed(2)}</td></tr>`
-      ).join("");
-    }
+        function setupTabs() {
+            $$(".tab-button").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const panel = button.dataset.panel;
+                    $$(".tab-button").forEach((item) => item.classList.toggle("active", item === button));
+                    $$(".tab-panel").forEach((item) => item.classList.toggle("active", item.id === panel));
+                });
+            });
+        }
 
-    function renderNetwork() {
-      const nodes = DATA.priority.map((row, index) => {
-        const [, lockId, region, gateway, mean] = row;
-        const x = 90 + (index % 5) * 135;
-        const y = 105 + Math.floor(index / 5) * 145 + (gateway ? -18 : 18);
-        const r = 8 + Math.min(mean / 140, 8);
-        const fill = gateway ? "var(--blue)" : "var(--text)";
-        return { lockId, region, gateway, x, y, r, fill };
-      });
-      const regionLabels = [
-        ["Southern Jiangsu", 115, 50],
-        ["Central Jiangsu", 330, 50],
-        ["Northern Jiangsu", 545, 50],
-        ["Grand Canal", 235, 360],
-        ["Gateway locks", 500, 360]
-      ];
-      const lines = nodes.slice(1).map((n, i) => {
-        const p = nodes[i];
-        return `<line x1="${p.x}" y1="${p.y}" x2="${n.x}" y2="${n.y}" stroke="rgba(0,113,227,.28)" stroke-width="2" />`;
-      }).join("");
-      const circles = nodes.map((n) =>
-        `<g class="node"><circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.fill}" opacity=".92" /><circle cx="${n.x}" cy="${n.y}" r="${n.r + 6}" fill="none" stroke="rgba(0,113,227,.14)" stroke-width="4" /><text x="${n.x}" y="${n.y + 34}" text-anchor="middle" fill="#424245" font-size="12" font-weight="700">L${n.lockId}</text></g>`
-      ).join("");
-      const labels = regionLabels.map(([name, x, y]) =>
-        `<text x="${x}" y="${y}" fill="#86868b" font-size="12" font-weight="800" letter-spacing="1">${name}</text>`
-      ).join("");
-      $("#network-svg").innerHTML = `<svg viewBox="0 0 760 430" role="img" aria-label="Priority lock network schematic"><rect x="28" y="78" width="704" height="262" rx="28" fill="rgba(255,255,255,.52)" stroke="rgba(0,0,0,.06)" />${labels}${lines}${circles}</svg>`;
-    }
+        function setupReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            $$(".reveal, .reveal-scale").forEach((element) => observer.observe(element));
+        }
 
-    function activate(id) {
-      $$(".panel").forEach((p) => p.classList.toggle("active", p.id === id));
-      $$(".tab,.nav-link").forEach((b) => b.classList.toggle("active", b.dataset.target === id));
-      const panel = document.getElementById(id);
-      if (panel) panel.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
+        function init() {
+            renderMetrics();
+            renderLayers();
+            renderBars("#hazard-bars", DATA.hazard, "%", "var(--apple-blue)");
+            renderBars("#capacity-bars", DATA.capacity, " min", "var(--apple-amber)");
+            renderPriority();
+            renderNetwork();
+            setupTabs();
+            setupReveal();
+        }
 
-    function bindTabs() {
-      $$(".tab,.nav-link").forEach((button) => button.addEventListener("click", () => activate(button.dataset.target)));
-    }
-
-    function init() {
-      renderMetrics();
-      renderLayers();
-      renderBars("#hazard-bars", DATA.hazard, { signed: true, suffix: "%", decimals: 1 });
-      renderBars("#co2-bars", DATA.co2, { color: "var(--green)", decimals: 3 });
-      renderCapacity();
-      renderPriority();
-      renderBars("#geo-bars", DATA.geo, { color: "var(--purple)", suffix: " min", decimals: 1 });
-      renderNetwork();
-      bindTabs();
-    }
-
-    init();
-  </script>
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
 </body>
 </html>
