@@ -479,6 +479,28 @@
             box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
         }
 
+        .lock-marker {
+            width: var(--size);
+            height: var(--size);
+            border-radius: 999px;
+            background: #1d1d1f;
+            border: 3px solid #ffffff;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.20), 0 0 0 8px rgba(0, 113, 227, 0.12);
+            transform: translate(-50%, -50%);
+            transition: width 0.45s var(--ease), height 0.45s var(--ease), background-color 0.45s var(--ease), box-shadow 0.45s var(--ease), opacity 0.45s var(--ease);
+            pointer-events: auto;
+        }
+
+        .lock-marker.is-highlighted {
+            background: #0071e3;
+            box-shadow: 0 16px 38px rgba(0, 113, 227, 0.28), 0 0 0 11px rgba(0, 113, 227, 0.18);
+            z-index: 1000;
+        }
+
+        .lock-marker.is-muted {
+            opacity: 0.55;
+        }
+
         .map-note {
             position: absolute;
             left: 1rem;
@@ -573,6 +595,12 @@
             font-size: 1.85rem;
             line-height: 1;
             letter-spacing: -0.04em;
+            transition: transform 0.45s var(--ease), opacity 0.45s var(--ease);
+        }
+
+        .output-tile strong.is-updating {
+            transform: translateY(-6px) scale(1.035);
+            opacity: 0.45;
         }
 
         .output-tile span {
@@ -774,8 +802,8 @@
                             <div class="control-card">
                                 <p class="control-label">Capacity package</p>
                                 <div class="slider-row">
-                                    <input id="topk-slider" type="range" min="5" max="20" step="5" value="10" aria-label="Top-K capacity package">
-                                    <div class="selected-lock">Top-K package: <strong id="topk-value">10 locks</strong></div>
+                                    <input id="topk-slider" type="range" min="3" max="10" step="1" value="5" aria-label="Top-K capacity package">
+                                    <div class="selected-lock">Top-K package: <strong id="topk-value">5 locks</strong></div>
                                 </div>
                             </div>
                             <div class="control-card">
@@ -969,7 +997,7 @@
             markers: {},
             bounds: {},
             activeRule: "local_burden",
-            topK: 10,
+            topK: 5,
             selectedLockId: 50
         };
 
@@ -1008,16 +1036,22 @@
             if (networkNote) networkNote.textContent = text;
         }
 
-        function markerStyle(lockId, highlighted) {
+        function markerSize(lockId) {
             const row = priorityById().get(lockId);
             const mean = row ? row[4] : 400;
-            return {
-                radius: Math.min(Math.max(mean / 190, 6), 16),
-                color: highlighted ? "#0071e3" : "#ffffff",
-                weight: highlighted ? 3 : 2,
-                fillColor: highlighted ? "#0071e3" : "#1d1d1f",
-                fillOpacity: highlighted ? 0.92 : 0.76
-            };
+            return Math.round(Math.min(Math.max(mean / 95, 18), 38));
+        }
+
+        function markerIcon(lockId, highlighted) {
+            const size = markerSize(lockId);
+            const className = `lock-marker ${highlighted ? "is-highlighted" : "is-muted"}`;
+            return L.divIcon({
+                className: "",
+                html: `<div class="${className}" style="--size:${size}px"></div>`,
+                iconSize: [size, size],
+                iconAnchor: [size / 2, size / 2],
+                popupAnchor: [0, -size / 2]
+            });
         }
 
         function fitMap(containerId) {
@@ -1027,7 +1061,9 @@
             setTimeout(() => {
                 map.invalidateSize();
                 map.fitBounds(bounds, { padding: [42, 42], maxZoom: 8 });
-                Object.values(state.markers[containerId] || {}).forEach((marker) => marker.bringToFront());
+                Object.values(state.markers[containerId] || {}).forEach((marker) => {
+                    if (typeof marker.bringToFront === "function") marker.bringToFront();
+                });
             }, 120);
         }
 
@@ -1048,7 +1084,10 @@
 
             const markers = {};
             DATA.locks.forEach((lock) => {
-                const marker = L.circleMarker([lock.lat, lock.lon], markerStyle(lock.id, selectedLocks().includes(lock.id)))
+                const marker = L.marker([lock.lat, lock.lon], {
+                    icon: markerIcon(lock.id, selectedLocks().includes(lock.id)),
+                    zIndexOffset: selectedLocks().includes(lock.id) ? 1000 : 200
+                })
                     .addTo(map)
                     .bindPopup(`<strong>${lock.name}</strong><br>${lock.region}<br>${lock.gateway ? "Gateway lock" : "Non-gateway lock"}`);
                 marker.on("click", () => {
@@ -1069,7 +1108,9 @@
             const highlighted = selectedLocks();
             Object.entries(state.markers).forEach(([containerId, markers]) => {
                 Object.entries(markers).forEach(([lockId, marker]) => {
-                    marker.setStyle(markerStyle(Number(lockId), highlighted.includes(Number(lockId))));
+                    const active = highlighted.includes(Number(lockId));
+                    marker.setIcon(markerIcon(Number(lockId), active));
+                    marker.setZIndexOffset(active ? 1000 : 200);
                 });
                 fitMap(containerId);
             });
@@ -1103,6 +1144,7 @@
                     state.activeRule = button.dataset.rule;
                     renderPolicyToolbox();
                     refreshMaps();
+                    setTimeout(refreshMaps, 120);
                 });
             });
             const slider = $("#topk-slider");
@@ -1115,9 +1157,32 @@
                     topKValue.textContent = `${state.topK} locks`;
                     updateToolOutput();
                     refreshMaps();
+                    setTimeout(refreshMaps, 120);
                 };
             }
             updateToolOutput();
+        }
+
+        function animateNumber(element, nextValue) {
+            if (!element) return;
+            const current = Number(element.dataset.value || element.textContent || 0);
+            const start = performance.now();
+            const duration = 520;
+            element.classList.add("is-updating");
+            const tick = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const value = current + (nextValue - current) * eased;
+                element.textContent = value.toFixed(1);
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    element.dataset.value = String(nextValue);
+                    element.textContent = nextValue.toFixed(1);
+                    element.classList.remove("is-updating");
+                }
+            };
+            requestAnimationFrame(tick);
         }
 
         function updateToolOutput() {
@@ -1127,8 +1192,8 @@
             const p90 = p9010 * (0.68 + 0.32 * scale);
             const meanOutput = $("#mean-output");
             const p90Output = $("#p90-output");
-            if (meanOutput) meanOutput.textContent = mean.toFixed(1);
-            if (p90Output) p90Output.textContent = p90.toFixed(1);
+            animateNumber(meanOutput, mean);
+            animateNumber(p90Output, p90);
         }
 
         function setupTabs() {
