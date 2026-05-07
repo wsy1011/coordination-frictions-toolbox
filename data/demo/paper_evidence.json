@@ -389,43 +389,5 @@
       "exposure_cp": 25.89,
       "sensitivity": 1.90
     }
-  ],
-  "figures": [
-    {
-      "id": "burden_decomposition",
-      "title": "Pre-dispatch versus post-dispatch burden",
-      "path": "figures/candidate_03_burden_decomposition.png",
-      "role": "Shows that the governance-relevant burden is concentrated before dispatch."
-    },
-    {
-      "id": "dispatch_pressure",
-      "title": "Dispatch pressure effects",
-      "path": "figures/candidate_04_dispatch_pressure_effects.png",
-      "role": "Visual companion to the dispatch-hazard contrast."
-    },
-    {
-      "id": "burden_translation",
-      "title": "Grouped burden-to-CO2 correspondence",
-      "path": "figures/candidate_16_burden_translation_flow.png",
-      "role": "Shows grouped movement across connected pressure, pre-dispatch burden, and calibrated CO2 categories."
-    },
-    {
-      "id": "priority_concentration",
-      "title": "Governance-priority concentration",
-      "path": "figures/candidate_23_priority_concentration.png",
-      "role": "Compares priority concentration across governance rules."
-    },
-    {
-      "id": "fixed_capacity",
-      "title": "Fixed-capacity benchmark",
-      "path": "figures/candidate_24_fixed_capacity_counterfactual.png",
-      "role": "Shows benchmark gains under shared fixed-capacity assumptions."
-    },
-    {
-      "id": "geographic_heterogeneity",
-      "title": "Geographic group heterogeneity",
-      "path": "figures/candidate_20_geographic_group_heterogeneity.png",
-      "role": "Shows how burden and connected exposure concentrate by regional and gateway grouping."
-    }
   ]
 }

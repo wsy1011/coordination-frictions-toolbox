@@ -1,6 +1,6 @@
 # Connected Lock Pressure Companion
 
-A bilingual companion website for the revised paper on connected lock pressure, AIS-visible waiting, pre-dispatch governance burden, grouped CO2 consequence evidence, and fixed-capacity governance targeting.
+A single-file companion website for the revised paper on connected lock pressure, AIS-visible waiting, pre-dispatch governance burden, grouped CO2 consequence evidence, and fixed-capacity governance targeting.
 
 This repository is a standalone demo website. It is intentionally separated from the upstream research repository and only uses aggregate demo snapshots or read-only data adapters. It does not publish event-level lock-passage records.
 
@@ -23,13 +23,13 @@ Suyang Wang
 
 ## What This Demo Does
 
-- Shows a connected lock network with observed lock locations on a real map.
-- Provides a bilingual English/Chinese frontend.
+- Uses one self-contained HTML file: `site/index.html`.
+- Shows an Apple-style evidence dashboard with inline CSS, inline data, and inline JavaScript.
 - Presents the paper's current headline evidence: mean and median pre-dispatch burden, corridor-pressure dispatch-hazard contrast, grouped CO2 consequence evidence, and the fixed-capacity benchmark.
 - Presents fixed-capacity governance comparisons as an evidence dashboard.
 - Separates direct burden relief from connected-bottleneck supervision as two governance objects.
-- Shows targeting indices and lock-level pre-dispatch waiting changes from aggregate demo snapshots.
-- Supports static GitHub Pages deployment using exported JSON snapshots.
+- Shows targeting indices and a schematic lock-priority network from aggregate table values.
+- Supports static GitHub Pages deployment without a Next.js build step.
 
 ## What This Demo Does Not Do
 
@@ -38,6 +38,7 @@ Suyang Wang
 - It does not modify the upstream research project.
 - It does not re-estimate the paper's empirical specification inside the browser.
 - It does not treat grouped CO2 evidence as the paper's main causal claim; it is supporting consequence evidence for the connected-pressure diagnosis.
+- It does not display paper figure PNGs or manuscript插图.
 
 ## Repository Structure
 
@@ -48,75 +49,24 @@ coordination-frictions-toolbox/
   data/demo/                # Demo snapshots and aggregate data
   docs/                     # Project notes and documentation
   exports/                  # Local exports and logs
-  frontend/                 # Next.js frontend
+  site/index.html           # Entire public website in one HTML file
   .github/workflows/        # GitHub Pages deployment workflow
 ```
 
 ## Local Development
 
-### 1. Start the backend
+The public website is a single static file. Open it directly:
 
 ```powershell
 cd D:\Code\coordination-frictions-toolbox
-Copy-Item .env.example .env
-python -m venv .venv
-.venv\Scripts\python -m pip install -r backend\requirements.txt
-.venv\Scripts\python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+Start-Process .\site\index.html
 ```
 
-The health check should be available at:
-
-[http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
-
-### 2. Start the frontend
-
-```powershell
-cd D:\Code\coordination-frictions-toolbox\frontend
-$env:NEXT_PUBLIC_API_BASE_URL="http://127.0.0.1:8000"
-npm install
-npm run dev -- --hostname 127.0.0.1 --port 3001
-```
-
-Open:
-
-[http://127.0.0.1:3001](http://127.0.0.1:3001)
+The backend remains available for local/private data workflows, but it is not required for the public page.
 
 ## Static GitHub Pages Deployment
 
-GitHub Pages only serves static files, so the demo uses a static-snapshot mode instead of running FastAPI on GitHub.
-
-### 1. Export static data payloads
-
-```powershell
-cd D:\Code\coordination-frictions-toolbox
-.venv\Scripts\python adapters\export_static_payloads.py
-```
-
-This generates static JSON files under:
-
-```text
-frontend/public/data/
-```
-
-### 2. Build the static frontend locally
-
-```powershell
-cd D:\Code\coordination-frictions-toolbox\frontend
-$env:NEXT_PUBLIC_STATIC_MODE="true"
-$env:STATIC_EXPORT="true"
-$env:GITHUB_REPO_NAME="coordination-frictions-toolbox"
-$env:NEXT_PUBLIC_BASE_PATH="/coordination-frictions-toolbox"
-npm install
-npm run build
-```
-
-The static output is written to:
-
-```text
-frontend/out/
-```
-
-### 3. Deploy with GitHub Actions
+GitHub Pages serves `site/index.html` directly. No frontend package install or build step is required.
 
 This repository includes:
 
@@ -131,19 +81,16 @@ To enable deployment:
 
 ## Runtime Modes
 
-The main environment variables are:
+The backend/data-adapter environment variables are:
 
 ```text
 APP_MODE=demo|private
 SOURCE_PROJECT_DIR=<read-only upstream research project path>
 PRIVATE_DATA_DIR=<restricted local/private data directory>
-MAP_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png
 MIN_DISCLOSURE_THRESHOLD=10
-NEXT_PUBLIC_STATIC_MODE=true|false
-NEXT_PUBLIC_BASE_PATH=/coordination-frictions-toolbox
 ```
 
-`demo` mode uses aggregate demo data and static snapshots. `private` mode is intended for local or intranet use with restricted data directories and should remain read-only with respect to upstream research assets.
+`demo` mode uses aggregate demo data. `private` mode is intended for local or intranet use with restricted data directories and should remain read-only with respect to upstream research assets.
 
 ## Data Boundary
 
